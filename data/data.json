@@ -1,0 +1,34 @@
+{
+  "status": 1,
+  "data": {
+    "userInfo":{
+      "username":"Tynech Hill",
+      "phone":"7206900332",
+      "email":"tyeh55@gmail.com",
+      "post":"80218",
+      "country":"UNITED STATES OF AMERICA",
+      "state":"CO ",
+      "city":"Denver",
+      "address1":"1710 Williams st apt.800",
+      "address2":""
+    },
+    "subOrderList": [
+      {
+        "orderNum": "111111111111",
+        "createTime": "2019-01-15",
+        "status": 1
+      },
+      {
+        "orderNum": "22222222222",
+        "createTime": "2019-01-16",
+        "status": 1
+      },
+      {
+        "orderNum": "33333333333",
+        "createTime": "2019-01-17",
+        "status": 1
+      }
+    ]
+  }
+}
+

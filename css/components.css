@@ -1,0 +1,10 @@
+
+.order-table{
+    border-collapse: collapse;
+    text-align: left;
+    border: 1px solid #000;
+    width: 100%;
+}
+.order-table td,.order-table th{
+    border: 1px solid #000;
+}
