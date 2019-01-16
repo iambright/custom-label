@@ -5,14 +5,51 @@
 //============自定义属性面板字段=======================================================
 
 /* // 例子
-CustomLabel.addPropsPanelField("textArea", function (data, update) {
-    var elem = $('<div><div class="cl-props-label">' + data.label + '</div><div class="cl-props-item"><textarea>' + data.value + '</textarea></div></div>');
-    elem.find('textarea').on('keyup', function () {
-        update($(this).val());
+ CustomLabel.addPropsPanelField("textArea", function (data, update) {
+ var elem = $('<div><div class="cl-props-label">' + data.label + '</div><div class="cl-props-item"><textarea>' + data.value + '</textarea></div></div>');
+ elem.find('textarea').on('keyup', function () {
+ update($(this).val());
+ });
+ return elem;
+ });
+ */
+
+// 可编辑多选框
+CustomLabel.addPropsPanelField("checkbox-edit", function (data, update) {
+    var elem = $('<div><div class="cl-props-label">' + data.label + '</div><div class="cl-props-item">' + data.option.map(function (obj) {
+            return '<div><input type="checkbox" class="checkbox" value="' + obj.value + '"/><label><input class="text-box" type="text" value="' + obj.text + '"></label></div>';
+        }).join('') + '</div></div>');
+    var checkboxList = elem.find('.checkbox').on('click', function () {
+        var val = [];
+        checkboxList.each(function () {
+            var self = $(this), index = self.parent().index();
+            if (self.prop("checked")) {
+                //val.push(self.val());
+                val.push(data.option[index]);
+            }
+        });
+        update(val);
+    }).each(function () {
+        var self = $(this);
+        if (data.value.filter(function (n) {
+                return n.value == self.val()
+            }).length) {
+            self.prop("checked", true);
+        }
+    });
+    elem.find('.text-box').on('change', function (e) {
+        var self = $(this), val = self.val(), index = self.parent().parent().index(), item = data.option[index];
+        item.text = val;
+        data.value.forEach(function (n) {
+            if (n.value == item.value) {
+                n.text = val;
+            }
+        });
+        update(data.value);
     });
     return elem;
 });
-*/
+
 
 //============自定义组件=======================================================
 
@@ -22,27 +59,33 @@ CustomLabel.addComponents([
         name: 'sub-order',
         group: '订单信息',
         icon: '',
-        label: '字订单列表',
+        label: '子订单列表',
         config: {
             // 模板默认显示的数据
             data: [
                 {
                     orderNo: '12345678',
                     createTime: '2019-01-15',
-                    status: 1,
+                    status: 1
                 }
             ],
             props: { // 属性面板配置
                 fields: {
                     group: '字段', // 属性分类
                     label: "显示字段",
-                    type: "checkbox",
+                    type: "checkbox-edit",
                     option: [
                         {text: '订单编号', value: 'orderNo'},
                         {text: '时间', value: 'createTime'},
                         {text: '状态', value: 'status'},
                     ],
-                    value: ['orderNo', 'createTime']
+                    value: [{text: '订单编号', value: 'orderNo'}, {text: '时间', value: 'createTime'}]
+                },
+                rowNum: {
+                    group: '字段', // 属性分类
+                    label: "显示行数",
+                    type: "text",
+                    value: 2
                 }
             },
             css: { // 默认外观信息
@@ -53,7 +96,7 @@ CustomLabel.addComponents([
             }
         },
         dataFormat: function (data) { // 数据mapping，将请求接口的数据mapping到自己需要的格式和字段
-            return data.data.subOrderList.map(function(item){
+            return data.data.subOrderList.map(function (item) {
                 return {
                     orderNo: item.orderNum,
                     createTime: item.createTime,
@@ -62,16 +105,27 @@ CustomLabel.addComponents([
             });
         },
         render: function (config) {
+            /*var html = '<table class="order-table"><thead><tr>' + config.props.fields.value.map(function (n) {
+             return '<th>' + config.props.fields.option.filter(function (o) {
+             return o.value == n
+             })[0].text + '</th>';
+             }).join('') + '</tr></thead><tbody>' + config.data.map(function (item) {
+             return '<tr>' + config.props.fields.value.map(function (n) {
+             return '<td><ec id="ec_order_'+n+'">' + item[n] + '</ec></td>';
+             }).join('') + '</tr>';
+             }).join('') + '</tbody></table>';*/
+
             var html = '<table class="order-table"><thead><tr>' + config.props.fields.value.map(function (n) {
-                    return '<th>' + config.props.fields.option.filter(function (o) {
-                            return o.value == n
-                        })[0].text + '</th>';
-                }).join('') + '</tr></thead><tbody>' + config.data.map(function (item) {
+                    return '<th>' + n.text + '</th>';
+                }).join('') + '</tr></thead><tbody>' + Array.apply(null, Array(~~config.props.rowNum.value)).map(function () {
+                    var item = config.data[0];
                     return '<tr>' + config.props.fields.value.map(function (n) {
-                            return '<td>' + item[n] + '</td>';
+                            return '<td><ec id="ec_order_' + n + '">' + item[n.value] + '</ec></td>';
                         }).join('') + '</tr>';
                 }).join('') + '</tbody></table>';
             var obj = $(html);
+
+
             return obj;
         }
     },
@@ -119,7 +173,7 @@ CustomLabel.addComponents([
             }
         },
         dataFormat: function (data) { // 数据mapping，将请求接口的数据mapping到自己需要的格式和字段
-            var userInfo=data.data.userInfo;
+            var userInfo = data.data.userInfo;
             return {
                 username: userInfo.username,
                 phone: userInfo.phone,
@@ -134,34 +188,34 @@ CustomLabel.addComponents([
         },
         render: function (config) {
             var html = '<div>';
-            if(config.props.fields.value.indexOf("address1")>-1){
-                html+='地址1：'+config.data.address1+'<br>';
+            if (config.props.fields.value.indexOf("address1") > -1) {
+                html += '地址1：' + config.data.address1 + '<br>';
             }
-            if(config.props.fields.value.indexOf("address2")>-1){
-                html+='地址2：'+config.data.address2+'<br>';
+            if (config.props.fields.value.indexOf("address2") > -1) {
+                html += '地址2：' + config.data.address2 + '<br>';
             }
-            if(config.props.fields.value.indexOf("phone")>-1){
-                html+='电话：'+config.data.phone+'<br>';
+            if (config.props.fields.value.indexOf("phone") > -1) {
+                html += '电话：' + config.data.phone + '<br>';
             }
-            if(config.props.fields.value.indexOf("email")>-1){
-                html+='电子邮件：'+config.data.email+'<br>';
+            if (config.props.fields.value.indexOf("email") > -1) {
+                html += '电子邮件：' + config.data.email + '<br>';
             }
-            if(config.props.fields.value.indexOf("post")>-1){
-                html+='邮编：'+config.data.post+'<br>';
+            if (config.props.fields.value.indexOf("post") > -1) {
+                html += '邮编：' + config.data.post + '<br>';
             }
-            if(config.props.fields.value.indexOf("country")>-1){
-                html+='国家：'+config.data.country+'<br>';
+            if (config.props.fields.value.indexOf("country") > -1) {
+                html += '国家：' + config.data.country + '<br>';
             }
-            if(config.props.fields.value.indexOf("city")>-1){
-                html+='城市：'+config.data.city+'<br>';
+            if (config.props.fields.value.indexOf("city") > -1) {
+                html += '城市：' + config.data.city + '<br>';
             }
-            if(config.props.fields.value.indexOf("state")>-1){
-                html+='地区：'+config.data.state+'<br>';
+            if (config.props.fields.value.indexOf("state") > -1) {
+                html += '地区：' + config.data.state + '<br>';
             }
-            if(config.props.fields.value.indexOf("username")>-1){
-                html+='客户姓名：'+config.data.username+'<br>';
+            if (config.props.fields.value.indexOf("username") > -1) {
+                html += '客户姓名：' + config.data.username + '<br>';
             }
-            html+='</div>';
+            html += '</div>';
             var obj = $(html);
             return obj;
         }

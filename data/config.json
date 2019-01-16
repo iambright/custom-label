@@ -123,8 +123,14 @@
           ],
           "props": {
             "fields": [
-              "orderNo",
-              "createTime"
+              {
+                "text": "订单编号888",
+                "value": "orderNo"
+              },
+              {
+                "text": "时间999",
+                "value": "createTime"
+              }
             ]
           },
           "css": {

@@ -620,7 +620,9 @@
         var that = this, handler = PropsPanel.fields[field.type];
         if (handler) {
             this.container.append(handler(field, function (val) {
-                field.value = val;
+                if(typeof val != "undefined"){
+                    field.value = val;
+                }
                 that.opts.config.props[field.name] = field;
                 that.onUpdate(that.opts);
             }));
