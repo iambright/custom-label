@@ -1,4 +1,4 @@
 # custom-label
 标签打印
-Jquery，
-支持IE9+
+基于Jquery，
+支持IE9+，chrome，firefox等。。。
