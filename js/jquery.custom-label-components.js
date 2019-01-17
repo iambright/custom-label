@@ -29,7 +29,7 @@ CustomLabel.addPropsPanelField("select", function (data, update) {
 // 多选框
 CustomLabel.addPropsPanelField("checkbox", function (data, update) {
     var elem = $('<div><div class="cl-props-label">' + data.label + '</div><div class="cl-props-item">' + data.option.map(function (obj) {
-            return '<div><input type="checkbox" class="checkbox" value="' + obj.value + '"/><label>' + obj.text + '</label></div>';
+            return '<div><input type="checkbox" id="checkbox_edit_' + obj.value + '" class="checkbox" value="' + obj.value + '"/><label for="checkbox_edit_' + obj.value + '">' + obj.text + '</label></div>';
         }).join('') + '</div></div>');
     var checkboxList = elem.find('.checkbox').on('click', function () {
         var val = [];
