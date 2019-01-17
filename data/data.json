@@ -12,6 +12,38 @@
       "address1":"1710 Williams st apt.800",
       "address2":""
     },
+    "goodsList": [
+      {
+        "goodsId": "111111111111",
+        "name": "Sony A7R Mark3",
+        "createTime": "2019-01-15",
+        "status": 1
+      },
+      {
+        "goodsId": "222222222",
+        "name": "MicroSoft Surface Book2",
+        "createTime": "2019-01-15",
+        "status": 1
+      },
+      {
+        "goodsId": "333333333",
+        "name": "MicroSoft Surface Pro6",
+        "createTime": "2019-01-15",
+        "status": 1
+      },
+      {
+        "goodsId": "44444444",
+        "name": "MicroSoft Surface Laptop",
+        "createTime": "2019-01-15",
+        "status": 1
+      },
+      {
+        "goodsId": "5555555",
+        "name": "MicroSoft Surface Phone",
+        "createTime": "2019-01-15",
+        "status": 1
+      }
+    ],
     "subOrderList": [
       {
         "orderNum": "111111111111",

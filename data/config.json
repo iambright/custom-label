@@ -131,7 +131,8 @@
                 "text": "时间999",
                 "value": "createTime"
               }
-            ]
+            ],
+            "rowNum": 2
           },
           "css": {
             "width": "100%",
@@ -152,10 +153,53 @@
           },
           "css": {
             "width": 50.25,
-            "height": 50,
+            "height": 50.25,
             "fontSize": "12px",
             "left": 315,
             "top": 315
+          }
+        }
+      },
+      {
+        "name": "goods-list",
+        "config": {
+          "data": [
+            {
+              "goodsId": "12345678",
+              "name": "Sony A7R3",
+              "createTime": "2019-01-15",
+              "status": 1
+            }
+          ],
+          "props": {
+            "fields": [
+              "goodsId",
+              "name",
+              "createTime"
+            ]
+          },
+          "css": {
+            "width": "100%",
+            "height": "auto",
+            "left": -1,
+            "fontSize": "12px",
+            "top": 168
+          }
+        }
+      },
+      {
+        "name": "x-line",
+        "config": {
+          "props": {
+            "width": "100%",
+            "weight": 1,
+            "style": "solid"
+          },
+          "css": {
+            "width": "100%",
+            "height": "5px",
+            "left": -1,
+            "top": 148
           }
         }
       }

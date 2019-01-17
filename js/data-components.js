@@ -130,6 +130,66 @@ CustomLabel.addComponents([
         }
     },
     {
+        name: 'goods-list',
+        group: '订单信息',
+        icon: '',
+        label: '商品列表',
+        config: {
+            // 模板默认显示的数据
+            data: [
+                {
+                    goodsId: '12345678',
+                    name: 'Sony A7R3',
+                    createTime: '2019-01-15',
+                    status: 1
+                }
+            ],
+            props: { // 属性面板配置
+                fields: {
+                    group: '字段', // 属性分类
+                    label: "显示字段",
+                    type: "checkbox",
+                    option: [
+                        {text: '商品编号', value: 'goodsId'},
+                        {text: '商品名称', value: 'name'},
+                        {text: '时间', value: 'createTime'},
+                        {text: '状态', value: 'status'},
+                    ],
+                    value: ['goodsId','name','createTime',]
+                }
+            },
+            css: { // 默认外观信息
+                width: '100%',
+                height: 'auto',
+                left: 0,
+                fontSize: '12px',
+            }
+        },
+        dataFormat: function (data) { // 数据mapping，将请求接口的数据mapping到自己需要的格式和字段
+            return data.data.goodsList.map(function (item) {
+                return {
+                    goodsId: item.goodsId,
+                    name: item.name,
+                    createTime: item.createTime,
+                    status: item.status,
+                };
+            });
+        },
+        render: function (config) {
+            var html = '<table class="order-table"><thead><tr>' + config.props.fields.value.map(function (n) {
+                    return '<th>' + config.props.fields.option.filter(function (o) {
+                            return o.value == n
+                        })[0].text + '</th>';
+                }).join('') + '</tr></thead><tbody>' + config.data.map(function (item) {
+                    return '<tr>' + config.props.fields.value.map(function (n) {
+                            return '<td><ec id="ec_order_' + n + '">' + item[n] + '</ec></td>';
+                        }).join('') + '</tr>';
+                }).join('') + '</tbody></table>';
+            var obj = $(html);
+            return obj;
+        }
+    },
+    {
         name: 'order-address',
         group: '地址信息',
         icon: '',
