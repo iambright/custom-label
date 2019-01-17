@@ -24,7 +24,7 @@ $(function () {
     });
 
     $(".btn-add-new-by-config").on('click',function (e) {
-        $.get("./data/config.json").then(function(data){
+        $.get("./data/config.json?random="+Math.random()).then(function(data){
             customLabel = new CustomLabel(data.config);
             customLabel.addPageWidgets(data.widgets);
             customLabel.onSave = function (data) {
@@ -36,7 +36,7 @@ $(function () {
     });
 
     $(".btn-fill-data").on('click',function (e) {
-        $.get("./data/data.json").then(function(data){
+        $.get("./data/data.json?random="+Math.random()).then(function(data){
             customLabel.fillData(data);
         });
     });
@@ -51,12 +51,12 @@ $(function () {
     $(".btn-finish").on('click',function (e) {
 
         // 第一步获取模板
-        $.get("./data/config.json").then(function(data){
+        $.get("./data/config.json?random="+Math.random()).then(function(data){
             // 第二步初始化
             var customLabel = new CustomLabel(data.config);
             customLabel.addPageWidgets(data.widgets);
             // 第三步填充订单信息
-            $.get("./data/data.json").then(function(data){
+            $.get("./data/data.json?random="+Math.random()).then(function(data){
                 customLabel.fillData(data);
                 // 第四步打印
                 var html = customLabel.getData();
