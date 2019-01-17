@@ -56,8 +56,8 @@
           "css": {
             "width": "100%",
             "height": "5px",
-            "left": -1,
-            "top": 203
+            "left": 0,
+            "top": 166
           }
         }
       },
@@ -65,14 +65,14 @@
         "name": "image",
         "config": {
           "props": {
-            "src": "http://img4.imgtn.bdimg.com/it/u=736890948,136012678&fm=26&gp=0.jpg"
+            "src": "./img/qrcode.jpg"
           },
           "css": {
             "width": 142,
             "height": 142,
             "fontSize": "12px",
-            "left": 219.20001220703125,
-            "top": 217
+            "left": 220.1875,
+            "top": 218
           }
         }
       },
@@ -106,6 +106,24 @@
             "height": "100%",
             "top": 0,
             "left": 53.20001220703125
+          }
+        }
+      },
+      {
+        "name": "local-text",
+        "config": {
+          "data": {
+            "text": "自定义文本"
+          },
+          "props": {
+            "text": "喜欢用上了就打赏点"
+          },
+          "css": {
+            "width": 125,
+            "fontSize": "12px",
+            "left": 231.5,
+            "top": 193,
+            "height": 23
           }
         }
       }
