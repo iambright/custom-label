@@ -77,9 +77,23 @@
 
     //
     CustomLabel.prototype.addPage = function () {
+        var that =this;
         var page = new Page({
             size: this.opts.size
         });
+        page.onContentMenu = function (e) {
+            showContextMenu(e, ["清空当前页"].concat(Page.pages.map(function (n) {
+                return '复制所有到页面：' + (n._index + 1);
+            })), [function () {
+                page.clear();
+            }].concat(Page.pages.map(function (_page) {
+                return function () {
+                    page.widgets.forEach(function (widget) {
+                        that.addWidget(_page, widget.getOption());
+                    });
+                };
+            })));
+        };
         this.wrap.append(page.getElem());
         return page;
     };
@@ -314,6 +328,24 @@
         widget.onCancelSelect = function () {
             that.hideProps();
         };
+        widget.onContentMenu = function (e, opts) {
+            showContextMenu(e, ["删除"].concat(Page.pages.map(function (n) {
+                return '复制到页面：' + (n._index + 1);
+            })).concat(Page.pages.map(function (n) {
+                return '移动到页面：' + (n._index + 1);
+            })), [function () {
+                widget.remove();
+            }].concat(Page.pages.map(function (page) {
+                return function(){
+                    that.addWidget(page,opts);
+                };
+            })).concat(Page.pages.map(function (page) {
+                return function(){
+                    that.addWidget(page,opts);
+                    widget.remove();
+                };
+            })));
+        }
     };
     //
     CustomLabel.prototype.initEvent = function () {
@@ -397,14 +429,11 @@
         this.initEvent();
     };
 
-    Page.prototype.onDrop = function () {
-    };
-    Page.prototype.onDragMove = function () {
-    };
-    Page.prototype.onDragEnter = function () {
-    };
-    Page.prototype.onDragLeave = function () {
-    };
+    Page.prototype.onDrop = function () {};
+    Page.prototype.onDragMove = function () {};
+    Page.prototype.onDragEnter = function () {};
+    Page.prototype.onDragLeave = function () {};
+    Page.prototype.onContentMenu=function(e){};
 
     Page.prototype.getElem = function () {
         return this.elem;
@@ -418,17 +447,7 @@
         this.container.on("contextmenu",function(e){
             e.preventDefault();
             e.stopPropagation();
-            showContextMenu(e, ["清空当前页"].concat(Page.pages.map(function (n) {
-                return '复制所有到页面：' + (n._index + 1);
-            })), [function () {
-                that.clear();
-            }].concat(Page.pages.map(function (page) {
-                return function(){
-                    that.widgets.forEach(function (widget) {
-                        page.addWidget(widget.getOption());
-                    });
-                };
-            })));
+            that.onContentMenu(e);
         });
     };
 
@@ -688,6 +707,8 @@
     Widget.prototype.onRemove = function (config) {
     };
 
+    Widget.prototype.onContentMenu=function(){};
+
     Widget.prototype.init = function (opts) {
         this.opts = opts || this.opts;
         this.elem = $("<div class='cl-widget' data-id='" + this.opts.id + "'><div class='cl-widget-drag'></div><div class='cl-widget-resize'></div><div class='cl-widget-container'></div></div>").css(this.opts.config.css).data("_id_",this.opts.id);
@@ -855,22 +876,7 @@
         }).on("contextmenu",function (e) {
             e.preventDefault();
             e.stopPropagation();
-            showContextMenu(e, ["删除"].concat(Page.pages.map(function (n) {
-                return '复制到页面：' + (n._index + 1);
-            })).concat(Page.pages.map(function (n) {
-                return '移动到页面：' + (n._index + 1);
-            })), [function () {
-                that.remove();
-            }].concat(Page.pages.map(function (page) {
-                return function(){
-                    page.addWidget(that.getOption());
-                };
-            })).concat(Page.pages.map(function (page) {
-                return function(){
-                    page.addWidget(that.getOption());
-                    that.remove();
-                };
-            })));
+            that.onContentMenu(e,that.getOption());
         });
     };
 
