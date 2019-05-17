@@ -1,0 +1,37 @@
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    background: #fff;
+}
+
+html {
+    -webkit-text-size-adjust: none;
+}
+
+.preview-page {
+    margin: 5px;
+    position: relative;
+    border: 2px solid #000;
+    page-break-after: always;
+}
+
+/* widget */
+.cl-widget {
+    position: absolute;
+    z-index: 2;
+}
+.cl-widget-container {
+    height: 100%;
+    overflow: hidden;
+}
+
+/*  */
+.js-hide {
+    display: none!important;
+}

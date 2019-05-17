@@ -3,14 +3,14 @@
     "mode": "normal",
     "name": "这是测试模板",
     "size": [
-      10,
-      10
+      100,
+      100
     ]
   },
   "widgets": [
     [
       {
-        "name": "order-address",
+        "name": "order-info",
         "config": {
           "data": {
             "username": "上帝",
@@ -112,7 +112,7 @@
     ],
     [
       {
-        "name": "sub-order",
+        "name": "order-info",
         "config": {
           "data": [
             {

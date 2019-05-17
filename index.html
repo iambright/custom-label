@@ -1,43 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta charset="UTF-8">
     <title>Custom Label</title>
-    <link rel="stylesheet" href="./css/custom-label.css">
-    <link rel="stylesheet" href="./css/components.css">
-    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
-    <script src="./js/jquery.custom-label.js"></script>
-    <script src="./js/jquery.custom-label-components.js"></script>
-    <script src="./js/data-components.js"></script>
-    <script src="./js/init.js"></script>
-    <style>
-        html,body{
-            padding: 0;
-            margin: 0;
-            height: 100%;
-            background: #eee;
-        }
-        .left-menu{
-            position: absolute;
-            left: 20px;
-            top:20px;
-            width: 150px;
-        }
-        .left-menu input{
-            display: block;
-            margin: 10px 0;
-        }
-    </style>
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1105799_whdel9usrf.css">
+    <link rel="stylesheet" href="css/custom-label.css">
+    <link rel="stylesheet" href="css/components.css">
 </head>
 <body>
-    <div class="left-menu">
-        <input type="button" class="btn-add-new" value="创建默认实例" />
-        <input type="button" class="btn-remove" value="删除实例" />
-        <input type="button" class="btn-add-new-by-config" value="拉取数据创建实例，数据在./data/config.json" />
-        <input type="button" class="btn-fill-data" value="拉取数据填充实例，数据在./data/data.json" />
-        <input type="button" class="btn-get-html" value="获取打印所需的HTML" />
-        <input type="button" class="btn-get-data" value="获取模板配置信息用" />
+    <div class="top-menu">
+        <button class="btn-add-new">初始化</button>
+        <button class="btn-remove">删除</button>
+        <button class="btn-add-new-by-config">创建实例</button>
+        <button class="btn-fill-data">填充实例</button>
+        <button class="btn-get-html">获取HTML</button>
+        <button class="btn-get-data">获取模板</button>
+        <button class="btn-finish">打印</button>
+        <button class="btn-reload">刷新</button>
     </div>
-    <div class="container" style="height: 700px;width: 1200px; margin: 0px auto;"></div>
+    <div class="container"></div>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.custom-label.js"></script>
+    <script src="js/jquery.custom-label-props.js"></script>
+    <script src="js/jquery.custom-label-components.js"></script>
+    <script src="js/init.js"></script>
 </body>
 </html>
