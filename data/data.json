@@ -1,16 +1,19 @@
 {
   "status": 1,
   "data": {
-    "userInfo":{
-      "username":"Tynech Hill",
-      "phone":"7206900332",
-      "email":"tyeh55@gmail.com",
-      "post":"80218",
-      "country":"UNITED STATES OF AMERICA",
-      "state":"CO ",
-      "city":"Denver",
-      "address1":"1710 Williams st apt.800",
-      "address2":""
+    "userInfo": {
+      "username": "Tynech Hill",
+      "phone": "7206900332",
+      "email": "tyeh55@gmail.com",
+      "post": "80218",
+      "country": "UNITED STATES OF AMERICA",
+      "state": "CO ",
+      "city": "Denver",
+      "address1": "1710 Williams st apt.800",
+      "address2": ""
+    },
+    "userName": {
+      "username": "Tynech Hill"
     },
     "goodsList": [
       {
@@ -60,7 +63,9 @@
         "createTime": "2019-01-17",
         "status": 1
       }
-    ]
+    ],
+    "common": {
+      "text": "TX10001"
+    }
   }
 }
-

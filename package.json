@@ -1,0 +1,19 @@
+{
+  "name": "custom",
+  "version": "1.0.0",
+  "description": "标签设计器",
+  "scripts": {
+    "test": "standard && node my-tests.js"
+  },
+  "main": "index.js",
+  "author": "wwhyes",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-promise": "^4.1.1",
+    "eslint-plugin-standard": "^4.0.0"
+  }
+}
