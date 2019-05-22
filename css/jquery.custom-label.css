@@ -1,3 +1,37 @@
+.top-menu {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    padding: 20px;
+    overflow: hidden;
+}
+
+.top-menu button {
+    margin: 0 10px;
+    display: inline-block;
+    width: 120px;
+    text-align: center;
+}
+
+.container {
+    padding-top: 63px;
+    height: 100vh;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.iconfont {
+    font-size: inherit;
+}
+
+.icon-trash {
+    color: #dd514c;
+}
+
+.js-hide {
+    display: none!important;
+}
 
 .cl-container * {
     box-sizing: border-box;
@@ -15,24 +49,20 @@
     overflow: hidden;
 }
 
-.cl-wrap{
+.cl-wrap {
     margin-left: 200px;
     padding-right: 200px;
     padding-bottom: 100px;
     height: 100%;
-    overflow-y: auto;
+    overflow: auto;
     background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAATAQMAAABInqSPAAAABlBMVEUAAAB/f3+S1582AAAAAnRSTlMAQABPjKgAAAAUSURBVAjXY2BwYMCL//9/AKKJwQAi5gdfwe0G+gAAAABJRU5ErkJggg==") rgb(58, 65, 68)
-}
-.cl-wrap .cl-page{
-    margin:15px 0 0 15px;
-    display: inline-block;
 }
 
 .cl-top-menu {
     margin-left: 199px;
     background: #f2f2f2;
     position: relative;
-    z-index: 2;
+    z-index: 1;
     height: 50px;
     line-height: 50px;
     overflow: hidden;
@@ -58,7 +88,6 @@
 
 .cl-top-menu-btn .cl-btn {
     margin-left: 10px;
-    display: inline-block;
     font-size: 13px;
 }
 
@@ -175,13 +204,12 @@
     overflow: auto;
 }
 
-.cl-props-container textarea {
+.cl-textarea {
     padding: 5px;
     display: block;
     width: 100%;
-    height: 52px;
+    height: 55px;
     line-height: 20px;
-    border-radius: 5px;
     resize: vertical;
 }
 
@@ -193,9 +221,7 @@
 .cl-props-item{
     line-height: 30px;
 }
-.cl-props-item .text-box {
-    width: 100%;
-}
+
 .cl-props-item .checkbox {
     width: auto;
 }
@@ -261,18 +287,17 @@
 }
 
 .cl-page {
+    margin:15px 0 0 15px;
+    display: inline-block;
+    color: #000;
+    white-space: nowrap;
+    position: relative;
     /*position: absolute;
     left: 30%;
     top: 80px;*/
-    position: relative;
-    padding: 5px;
-    background: #fff;
-    border-radius: 5px;
-    box-shadow: #000000 0px 0px 10px 1px;
-    color: #000;
 }
 
-.cl-page-name{
+.cl-page-name {
     position: absolute;
     right: -10px;
     top: -10px;
@@ -289,7 +314,7 @@
     font-weight: bold;
     color: #666;
 }
-.cl-page-name i{
+/* .cl-page-name i {
     display: none;
     cursor: pointer;
     font-style: normal;
@@ -298,22 +323,71 @@
     line-height: 23px;
     font-weight: normal;
 }
-.cl-page:hover .cl-page-name{
+.cl-page:hover .cl-page-name {
     background: #ff5500;
     border-color:#ff5500;
 }
-.cl-page:hover .cl-page-name i{
+.cl-page:hover .cl-page-name i {
     display: block;
 }
-.cl-page:hover .cl-page-name span{
+.cl-page:hover .cl-page-name span {
     display: none;
+} */
+
+.cl-page-container,
+.cl-page-preview-area{
+    display: inline-block;
+    border: 5px solid rgba(0, 0, 0, 0.4);
+    border-radius: 5px;
+    vertical-align: middle;
 }
 .cl-page-container {
-    position: relative;
-    border: 2px solid #e0e0e0;
     background: #f8f8f8;
-    width: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+    position: relative;
+}
+.cl-page-preview-area {
+    font-size: 0;
+    text-align: center;
+}
+.cl-page-preview-area.multiply {
+    border-color: #0e90d2;
+    position: absolute;
+    left: 0;
+}
+.cl-page-preview-area::before {
+    content: " ";
+    display: inline-block;
     height: 100%;
+    vertical-align: middle;
+}
+.cl-page-preview-area img {
+    margin: 0 auto;
+    display: inline-block;
+    max-width: 100%;
+    max-height: 100%;
+    vertical-align: middle;
+}
+
+.cl-page-tools {
+    padding: 5px 10px;
+    display: inline-block;
+    border-radius: 5px;
+    vertical-align: middle;
+    overflow: hidden;
+}
+
+.cl-page-tools [type=file] {
+    position: absolute;
+    left: -9999em;
+}
+.cl-page-tools .cl-btn {
+    display: block;
+}
+.cl-page-tools .cl-btn + .cl-btn {
+    margin-top: 10px;
 }
 
 
@@ -346,7 +420,7 @@
 
 .cl-widget-container {
     height: 100%;
-    /* overflow: hidden; */
+    overflow: hidden;
 }
 
 .cl-widget-resize {
@@ -391,7 +465,6 @@
 
 .cl-no-select {
     background-color: #fff9ea;
-    border-style: dashed;
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Chrome/Safari/Opera */
     -khtml-user-select: none; /* Konqueror */
@@ -399,11 +472,14 @@
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none; /* Non-prefixed version, currently not supported by any browser */
 }
+.cl-no-select~.cl-page-preview-area.multiply {
+    opacity: .3;
+}
 
 .cl-btn {
-    display: block;
-    margin-bottom: 0;
+    margin: 0;
     padding: 5px 10px;
+    display: inline-block;
     font-size: 16px;
     font-weight: 400;
     line-height: 1.2;
@@ -423,16 +499,19 @@
     transition: background-color .3s ease-out,border-color .3s ease-out;
 }
 
+.cl-btn-block {
+    display: block;
+    width: 100%;
+}
+
 .cl-btn-default {
     color: #333;
     background-color: #ffffff;
     border-color: #e6e6e6;
 }
-
 .cl-btn-default:hover {
     background-color: #e6e6e6;
 }
-
 .cl-btn-default:active {
     background-color: #d4d4d4;
     border-color: #c7c7c7;
@@ -443,13 +522,11 @@
     background-color: #0e90d2;
     border-color: #0e90d2;
 }
-
 .cl-btn-primary:hover {
     color: #fff;
     border-color: #0a6999;
     background-color: #0c79b1;
 }
-
 .cl-btn-primary:active {
     color: #fff;
     border-color: #0a6999;
@@ -461,21 +538,35 @@
     background-color: #5eb95e;
     border-color: #5eb95e;
 }
-
 .cl-btn-success:hover {
     color: #fff;
     border-color: #429842;
     background-color: #4aaa4a;
 }
-
 .cl-btn-success:active {
     color: #fff;
     border-color: #429842;
     background-color: #3f913f;
 }
 
+.cl-btn-danger {
+    color: #fff;
+    border-color: #dd514c;
+    background-color: #dd514c;
+}
+.cl-btn-danger:hover {
+    color: #fff;
+    border-color: #c62b26;
+    background-color: #d7342e;
+}
+.cl-btn-danger:active {
+    color: #fff;
+    border-color: #c62b26;
+    background-color: #be2924;
+}
+
 .cl-radius {
-    border-radius: 2px;
+    border-radius: 3px;
 }
 
 .cl-mr5 {
@@ -487,7 +578,7 @@
 }
 
 .cl-form-group {
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     font-size: 14px;
     position: relative;
 }
@@ -503,14 +594,15 @@
     color: #333;
     font-size: 14px;
     font-weight: bold;
-    line-height: 1.5;
+    line-height: 22px;
     cursor: pointer;
     position: relative;
 }
 .cl-checkbox:first-child {
-    margin-top: 5px;
+    margin-top: 6px;
 }
-.cl-checkbox input[type=checkbox] {
+.cl-checkbox input[type=checkbox],
+.cl-checkbox input[type=radio] {
     margin: 5px 0 0 -20px;
     float: left;
     outline: 0;
@@ -571,27 +663,68 @@
 
 .cl-select[disabled],
 .cl-input[disabled] {
-    cursor: not-allowed;
     background-color: #eee;
 }
-input[type=checkbox][disabled] {
+select[disabled],
+input[type=text][disabled],
+input[type=checkbox][disabled],
+input[type=radio][disabled] {
     cursor: not-allowed;
 }
 
 
 .cl-form-group-inline {
-    display: table;
-    align-items: center;
     margin-bottom: 10px;
+    display: table;
 }
-.cl-form-group-inline .cl-form-group {
-    display: table-cell;
+.cl-form-control > .cl-form-group-inline {
     margin-bottom: 0;
 }
+.cl-form-group-inline .cl-form-group {
+    margin-bottom: 0;
+    padding-right: 10px;
+    display: table-cell;
+}
+
 
 .cl-props-container .cl-form-group-inline {
     margin: 0 -10px 10px;
 }
 .cl-props-container .cl-form-group-inline .cl-form-group {
     padding: 0 10px;
+}
+
+.cl-form-horizontal > .cl-form-group > .cl-form-group-label {
+    margin-bottom: 0;
+    width: 20%;
+    text-align: right;
+}
+
+.cl-form-horizontal > .cl-form-group > .cl-form-control {
+    display: inline-table;
+    width: 79%;
+    vertical-align: middle;
+}
+
+.cl-input-group {
+    display: table;
+    border-collapse: separate;
+    position: relative;
+}
+
+.cl-input-group-addon {
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1;
+    color: #555;
+    text-align: center;
+    background-color: #eee;
+    border: 1px solid #ccc;
+}
+
+.cl-input-group .cl-input,
+.cl-input-group-addon,
+.cl-input-group-btn {
+    display: table-cell;
 }

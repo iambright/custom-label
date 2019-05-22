@@ -7,17 +7,19 @@ body {
     padding: 0;
     margin: 0;
     height: 100%;
+    min-height: 100%;
     background: #fff;
 }
 
 html {
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
     -webkit-text-size-adjust: none;
 }
 
 .preview-page {
     margin: 5px;
     position: relative;
-    border: 2px solid #000;
+    border: 1px solid #000;
     page-break-after: always;
 }
 

@@ -4,63 +4,52 @@
 
 //= ===========自定义属性面板字段=======================================================
 
-// text
+// 输入框
 CustomLabel.addPropsPanelField('text', function (data, update) {
-    var elem = [
-        '<div>',
-            '<div class="cl-props-label">' + data.label + '</div>',
-            '<div class="cl-props-item">',
-                '<input type="text" class="text-box" value="' + data.value + '" />',
-            '</div>',
-        '</div>'
-    ].join('')
-    var $elem = $(elem)
-
-    $elem.on('keyup', 'input', function () {
-        update($(this).val())
-    })
-
-    return elem
-})
-
-// 文本域
-CustomLabel.addPropsPanelField('textArea', function (data, update) {
     var $elem = $([
-        '<div>',
-            '<div class="cl-props-label">' + data.label + '</div>',
-            '<div class="cl-props-item">',
-                '<textarea>' + data.value + '</textarea>',
-            '</div>',
+        '<div class="cl-form-group">',
+            '<label class="cl-form-group-label">' + data.label + '：</label>',
+            '<input class="cl-input" type="text" data-widget-type="text" value="' + data.value + '">',
         '</div>'
     ].join(''))
 
-    $elem.find('textarea')
-        .on('keyup', function () {
-            update($(this).val())
-        })
+    $elem.on('keyup', '[data-widget-type="text"]', function () {
+        update(this.value)
+    })
+
+    return $elem
+})
+
+// 文本域
+CustomLabel.addPropsPanelField('textarea', function (data, update) {
+    var $elem = $([
+        '<div class="cl-form-group">',
+            '<label class="cl-form-group-label">' + data.label + '：</label>',
+            '<textarea class="cl-textarea" data-widget-type="textarea">' + data.value + '</textarea>',
+        '</div>'
+    ].join(''))
+
+    $elem.on('keyup', '[data-widget-type="textarea"]', function () {
+        update($(this).val())
+    })
 
     return $elem
 })
 
 // 下拉框
 CustomLabel.addPropsPanelField('select', function (data, update) {
-    var options = data.option.map(function (obj) {
-        return '<option value="' + obj.value + '">' + obj.text + '</option>'
-    }).join('')
     var $elem = $([
-        '<div>',
-            '<div class="cl-props-label">' + data.label + '</div>',
-            '<div class="cl-props-item">',
-                '<select>' + options + '</select>',
-            '</div>',
+        '<div class="cl-form-group">',
+            '<label class="cl-form-group-label">' + data.label + '：</label>',
+            '<select class="cl-select" data-widget-type="select">',
+                createOptionTpl(data.option, data.value),
+            '</select>',
         '</div>'
     ].join(''))
 
-    $elem.find('select')
-        .prop('value', data.value)
-        .on('change', function () {
-            update($(this).val())
-        })
+    $elem.on('change', '[data-widget-type="select"]', function () {
+        update($(this).val())
+    })
 
     return $elem
 })
@@ -247,7 +236,9 @@ CustomLabel.addPropsPanelField('date', function (prop, update) {
     var $elem = $([
         '<div>',
             '<label class="cl-checkbox">',
-                '<input type="checkbox" data-widget-value="yearVisible">',
+                value.yearVisible
+                    ? '<input type="checkbox" data-widget-value="yearVisible" checked>'
+                    : '<input type="checkbox" data-widget-value="yearVisible">',
                 '显示年份',
             '</label>',
             '<div class="cl-form-group">',
@@ -257,7 +248,7 @@ CustomLabel.addPropsPanelField('date', function (prop, update) {
                         { value: '-', label: '中横杠（-）' },
                         { value: '/', label: '斜　线（/）' },
                         { value: '.', label: '逗　点（.）' }
-                    ]),
+                    ], value.separator || '-'),
                 '</select>',
             '</div>',
             '<div class="cl-form-group">',
@@ -267,19 +258,19 @@ CustomLabel.addPropsPanelField('date', function (prop, update) {
                         { value: 'left', label: '左对齐' },
                         { value: 'center', label: '居中' },
                         { value: 'right', label: '右对齐' }
-                    ]),
+                    ], value.css.textAlign),
                 '</select>',
             '</div>',
             '<div class="cl-form-group">',
                 '<label class="cl-form-group-label">日期文字字体：</label>',
                 '<select class="cl-select" data-widget-name="fontFamily" data-widget-type="select">',
-                    createOptionTpl(['Arial', 'Helvetica', 'Tahoma', 'Verdana', 'Lucida Grande', 'Times New Roman', 'Georgia']),
+                    createOptionTpl(['Arial', 'Helvetica', 'Tahoma', 'Verdana', 'Lucida Grande', 'Times New Roman', 'Georgia'], value.css.fontFamily),
                 '</select>',
             '</div>',
             '<div class="cl-form-group">',
                 '<label class="cl-form-group-label">日期文字尺寸：</label>',
                 '<select class="cl-select" data-widget-name="fontSize" data-widget-type="select">',
-                    createOptionTpl(['6px', '8px', '9px', '10px', '11px', '12px', '14px', '16px', '18px', '24px', '30px', '36px', '48px', '60px', '72px']),
+                    createOptionTpl(['6px', '8px', '9px', '10px', '11px', '12px', '14px', '16px', '18px', '24px', '30px', '36px', '48px', '60px', '72px'], value.css.fontSize),
                 '</select>',
             '</div>',
             '<div class="cl-form-group">',
@@ -292,39 +283,18 @@ CustomLabel.addPropsPanelField('date', function (prop, update) {
                         { value: '2', label: '2倍' },
                         { value: '2.5', label: '2.5倍' },
                         { value: '3', label: '3倍' }
-                    ]),
+                    ], value.css.lineHeight),
                 '</select>',
             '</div>',
             '<label class="cl-checkbox">',
-                '<input type="checkbox" data-widget-name="fontWeight" data-widget-type="checkbox" data-widget-default="normal" data-widget-value="bold">',
+                value.css.fontWeight === 'bold'
+                    ? '<input type="checkbox" data-widget-name="fontWeight" data-widget-type="checkbox" data-widget-default="normal" data-widget-value="bold" checked>'
+                    : '<input type="checkbox" data-widget-name="fontWeight" data-widget-type="checkbox" data-widget-default="normal" data-widget-value="bold">',
                 '日期文字加粗',
             '</label>',
         '</div>'
     ].join(''))
 
-    // initData
-    $elem.find('[data-widget-value="yearVisible"]').prop('checked', value.yearVisible)
-    $elem.find('[data-widget-value="separator"]').val(value.separator)
-    $elem.find('[data-widget-name]').each(function () {
-        var name = $(this).data('widgetName')
-        var type = $(this).data('widgetType') || 'text'
-
-        switch (type) {
-            case 'text':
-            case 'select':
-                $(this).val(value.css[name])
-                break
-            case 'checkbox':
-                if (value.css[name] && value.css[name] === $(this).data('widgetValue')) {
-                    $(this).prop('checked', true)
-                } else {
-                    $(this).prop('checked', false)
-                }
-                break
-        }
-    })
-
-    // initEvent
     $elem
         .on('keyup', '[data-widget-type="text"]', function () {
             var name = $(this).data('widgetName')
@@ -544,7 +514,7 @@ CustomLabel.addPropsPanelField('tableRow', function (prop, update) {
     var theadText = $([
         '<div class="cl-form-group">',
             '<label class="cl-form-group-label">' + label + '表头文字：</label>',
-            '<textarea data-widget-name="text" data-widget-type="textarea">' + value.text + '</textarea>',
+            '<textarea class="cl-textarea" data-widget-name="text" data-widget-type="textarea">' + value.text + '</textarea>',
         '</div>'
     ].join(''))
     theadText.appendTo($elem)
@@ -578,7 +548,7 @@ CustomLabel.addPropsPanelField('tableRow', function (prop, update) {
 
     var $textarea = $([
         '<label class="cl-form-group-label">自定义文字内容：</label>',
-        '<textarea data-widget-name="const" data-widget-type="textarea">' + value.const + '</textarea>'
+        '<textarea class="cl-textarea" data-widget-name="const" data-widget-type="textarea">' + value.const + '</textarea>'
     ].join(''))
 
     // init document
@@ -634,6 +604,67 @@ CustomLabel.addPropsPanelField('tableRow', function (prop, update) {
                     break
             }
         })
+
+    return $elem
+})
+
+// 文件上传
+CustomLabel.addPropsPanelField('fileUpload', function (prop, update) {
+    var prop = $.extend({
+        option: {
+            maxSize: 1024000,
+            reg: ''
+        }
+    }, prop)
+
+    var value = prop.value
+    var label = prop.label
+    var option = prop.option
+    var host = 'http://172.16.0.126:888'
+    var $elem = $('<div></div>')
+
+    var $fileUpload = $([
+        '<div class="cl-form-group">',
+            '<label class="cl-form-group-label">选择' + label + '：</label>',
+            '<input class="cl-input" id="templetfile" type="file" value="' + value + '">',
+        '</div>'
+    ].join(''))
+    $fileUpload
+        .on('change', '[type="file"]', function () {
+            if (window.File && window.FileList) {
+                var	files = document.getElementById("templetfile").files;
+
+                // 限制上传文件大小
+                if (files[0].size >= option.maxSize) {
+                    alert('图片容量过大，单张图片容量不能大于1MB！')
+                    return false
+                }
+
+                //文件格式过滤
+                var reg = new RegExp(option.reg, 'i')
+                if(option.reg && !reg.test(files[0].type)){
+                    console.log('请上传正确类型的文件')
+                    return false
+                }
+
+                $.ajaxFileUpload({
+                    url: host + '/api/upload_img',
+                    secureuri: false,
+                    fileElementId: 'file',
+                    dataType: 'json',
+                    success: function (data, status) {
+                        console.log('上传成功')
+                        console.log(data)
+                    },
+                    error: function (data, status, e) {
+                        console.log('上传失败')
+                    }
+                })
+            } else {
+                alert('浏览器无法上传')
+            }
+        })
+        .appendTo($elem)
 
     return $elem
 })

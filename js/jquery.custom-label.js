@@ -15,7 +15,8 @@
         Page.pages = []
         opts = $.extend({
             mode: 'normal',
-            name: '模板名称',
+            name: '默认名称',
+            type: '默认类型',
             size: [100, 100]
         }, opts)
         this.init(opts)
@@ -46,222 +47,58 @@
                     // TODO 直接打印
                     break
                 default:
-                    console.error('this mode was undefined')
+                    console.error('CustomLabel\'s mode was undefined')
             }
         },
         initLayout: function (opts) {
             this.opts = opts || this.opts
             this.container = $('<div class="cl-container"></div>')
-            this.propPanel = $('<div class="cl-props"></div>')
-            this.wrap = $('<div class="cl-wrap"></div>')
-            this.initComponentsLayout()
+
+            this.topMenu = $('<div class="cl-top-menu"></div>')
             this.initTopMenuLayout()
-            this.container.append([this.propPanel, this.wrap])
-        },
-        initEvent: function () {},
-        initComponentsLayout: function () {
-            var that = this
-            var components = this.components
-            var groups = []
-            var optionTpl = components.map(function (component) {
-                if (groups.indexOf(component.group) < 0) {
-                    groups.push(component.group)
-                    return '<option value="' + component.group + '">' + component.group + '</option>'
-                }
-            }).join('')
-            var html = [
-                '<div class="cl-component-group-select">',
-                    '<select class="cl-select">',
-                        optionTpl,
-                    '</select>',
-                '</div>'
-            ].join('')
 
             this.leftMenu = $('<div class="cl-left-menu"></div>')
-            this.leftMenu.append(html)
-                .on('change', '.cl-component-group-select>select', function () {
-                    that.componentContainer.remove()
-                    that.showComponentsByGroup($(this).val())
-                })
+            this.initLeftMenuLayout()
 
-            this.showComponentsByGroup(groups[0])
-            this.container.append(this.leftMenu)
+            this.propPanel = $('<div class="cl-props"></div>')
+            this.wrap = $('<div class="cl-wrap"></div>')
+            
+            this.container.append([this.topMenu, this.leftMenu, this.propPanel, this.wrap])
         },
-        initTopMenuLayout: function () {
+        initEvent: function () {
             var that = this
-            var topMenuTpl = [
-                '<div class="cl-top-menu">',
-                    '<label>模板名称</label>',
-                    '<span>' + that.opts.name + '</span>',
-                    '<label>规格尺寸</label>',
-                    '<span>' + that.opts.size[0] + 'mm*' + that.opts.size[1] + 'mm</span>',
-                    '<div class="cl-top-menu-btn">',
-                        '<button class="cl-btn cl-btn-primary cl-radius btn-add">新增页面</button>',
-                        '<button class="cl-btn cl-btn-primary cl-radius btn-preview">',
-                            '<i class="iconfont icon-print cl-mr10"></i>打印',
-                        '</button>',
-                        '<button class="cl-btn cl-btn-default cl-radius btn-clear">',
-                            '<i class="iconfont icon-trash cl-mr10"></i>清空',
-                        '</button>',
-                        '<button class="cl-btn cl-btn-success cl-radius btn-save">',
-                            '<i class="iconfont icon-save cl-mr10"></i>保存',
-                        '</button>',
-                    '</div>',
-                '</div>'
-            ].join('')
 
-            that.topMenu = $(topMenuTpl)
+            // Init TopMenu Event
             that.topMenu
-                .on('click', 'button.btn-add', function () {
-                    // 新增页面
+                .on('click', 'button.btn-add', function () { // 新增页面
                     that.addPage()
                 })
-                .on('click', 'button.btn-preview', function () {
-                    // 打印
+                .on('click', 'button.btn-preview', function () { // 打印
                     that.preview()
                 })
-                .on('click', 'button.btn-clear', function () {
-                    // 保存
+                .on('click', 'button.btn-clear', function () { // 清空
                     that.clear()
                 })
-                .on('click', 'button.btn-save', function () {
-                    // 清空
+                .on('click', 'button.btn-save', function () { // 保存
                     var data = that.getData()
                     that.onSave(data)
                 })
 
-            that.container.find('.cl-top-menu').remove()
-            that.container.append(this.topMenu)
-        },
-        showComponentsByGroup: function (group) {
-            var components = this.components.filter(function (n) {
-                return n.group === group
-            })
-            var componentsTpl = components.map(function (component) {
-                return component.image
-                    ? [
-                        '<div class="cl-component-group-item" draggable="true" data-name="' + component.name + '" data-group="' + component.group + '">',
-                            '<img class="cl-component-group-item-image" src="' + component.image + '"/>',
-                            '<img class="cl-component-group-item-drag" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="/>',
-                        '</div>'
-                    ].join('')
-                    : [
-                        '<div class="cl-component-group-item" draggable="true" data-name="' + component.name + '" data-group="' + component.group + '">',
-                            '<i class="cl-component-group-item-icon iconfont ' + component.icon + '"></i>',
-                            '<span class="cl-component-group-item-span">' + component.label + '</span>',
-                            '<img class="cl-component-group-item-drag" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=="/>',
-                        '</div>'
-                    ].join('')
-            }).join('')
-
-            this.componentContainer = $('<div class="cl-component-group-container"></div>')
-            this.componentContainer
-                .html(componentsTpl)
-                .appendTo(this.leftMenu)
-
-            this.initComponents()
-        },
-        onSave: function (data) {
-            console.log('onSave:', data)
-            console.log('onSave:', JSON.stringify(data))
-            // TODO: 保存信息
-        },
-        fillData: function (data) {
-            Page.pages.forEach(function (page) {
-                page.widgets.forEach(function (widget) {
-                    widget.fill({
-                        data: data
-                    })
+            // Init Component Select Event
+            that.componentSelect.find('.cl-select')
+                .change(function () {
+                    that.showComponentsByGroup.call(that, this.value)
                 })
-            })
-        },
-        addPage: function () {
-            var page = new Page({
-                size: this.opts.size
-            })
-            this.wrap.append(page.getElem())
-            return page
-        },
-        getElem: function () {
-            return this.container
-        },
-        remove: function () {
-            this.container.remove()
-        },
-        getData: function () {
-            var data = Page.pages.map(function (page) {
-                return page.widgets.map(function (widget) {
-                    return widget.getOption()
-                })
-            })
+                .trigger('change')
 
-            return { config: this.opts, widgets: data }
-        },
-        addWidget: function (page, opts) {
-            var widget = page.addWidget(opts)
-            this.initWidget(widget)
-        },
-        addWidgets: function (page, widgets) {
-            var that = this
-            widgets.forEach(function (widget) {
-                that.addWidget(page, widget)
-            })
-        },
-        addPageWidgets: function (list) {
-            var that = this
-            list.forEach(function (widgets) {
-                var page = that.addPage()
-                that.addWidgets(page, widgets)
-            })
-        },
-        getHtml: function () {
-            var that = this
-            var previewPages = Page.pages.map(function (page) {
-                var widgetsTpl = page.widgets.map(function (widget) {
-                    return widget.getHtml()
-                }).join('')
-                var $previewPage = $('<div class="preview-page">' + widgetsTpl + '</div>')
-
-                $previewPage.css({
-                    position: 'relative',
-                    width: that.opts.size[0] + 'mm',
-                    height: that.opts.size[0] + 'mm'
-                })
-
-                return $previewPage.prop('outerHTML')
-            }).join('')
-
-            return [
-                '<!DOCTYPE html>',
-                    '<html lang="en">',
-                    '<head>',
-                        '<meta charset="UTF-8">',
-                        '<title>打印预览</title>',
-                        '<link rel="stylesheet" href="./css/preview.css">',
-                    '</head>',
-                    '<body>' + previewPages + '</body>',
-                '</html>'
-            ].join('')
-        },
-        preview: function () {
-            var opener = window.open('about:blank')
-            opener.document.write(this.getHtml())
-        },
-        clear: function () {
-            Page.pages.forEach(function (page) {
-                page.clear()
-            })
-        },
-        initComponents: function () {
-            var that = this
-
-            that.componentContainer.find('.cl-component-group-item')
-                .on('dragstart-bak', function (e) {
+            // Init Component Item Event
+            that.componentContainer
+                .on('dragstart-bak', '.cl-component-group-item', function (e) {
                     var self = $(this)
                     var name = self.data().name
                     e.originalEvent.dataTransfer.setData('text', name)
                 })
-                .on('mousedown', function (e) {
+                .on('mousedown', '.cl-component-group-item', function (e) {
                     setCapture(e)
                     e.stopPropagation()
                     var self = $(this)
@@ -277,8 +114,8 @@
                         top: position.y,
                         marginLeft: -position.x + offset.left,
                         marginTop: -position.y + offset.top,
-                        width: self.width(),
-                        height: self.height(),
+                        width: '178px',
+                        // height: self.height(),
                         zIndex: 3
                     }).appendTo(document.body)
 
@@ -317,9 +154,147 @@
                         that.initWidget(widget)
                     }
                 })
-                .find('.cl-component-group-item-drag').on('mousedown', function (e) {
+                .on('mousedown', '.cl-component-group-item-drag', function (e) {
                     e.preventDefault()
                 })
+        },
+        initTopMenuLayout: function () {
+            this.topMenu.html([
+                '<label>模板名称</label>',
+                '<span>' + this.opts.name + '</span>',
+                '<label>模板类型</label>',
+                '<span>' + this.opts.type + '</span>',
+                '<label>规格尺寸</label>',
+                '<span>' + this.opts.size[0] + 'mm*' + this.opts.size[1] + 'mm</span>',
+                '<div class="cl-top-menu-btn">',
+                    '<button class="cl-btn cl-btn-primary cl-radius btn-add">新增页面</button>',
+                    '<button class="cl-btn cl-btn-primary cl-radius btn-preview"><i class="iconfont icon-print cl-mr10"></i>打印</button>',
+                    '<button class="cl-btn cl-btn-default cl-radius btn-clear"><i class="iconfont icon-trash cl-mr10"></i>清空</button>',
+                    '<button class="cl-btn cl-btn-success cl-radius btn-save"><i class="iconfont icon-save cl-mr10"></i>保存</button>',
+                '</div>'
+            ].join(''))
+        },
+        initLeftMenuLayout: function () {
+            var components = this.components
+            var groups = []
+            var optionTpl = components.map(function (component) {
+                if (groups.indexOf(component.group) < 0) {
+                    groups.push(component.group)
+                    return '<option value="' + component.group + '">' + component.group + '</option>'
+                }
+            }).join('')
+
+            this.componentSelect = $('<div class="cl-component-group-select"><select class="cl-select">' + optionTpl + '</select></div>')
+            this.componentContainer = $('<div class="cl-component-group-container"></div>')
+
+            this.leftMenu.append([this.componentSelect, this.componentContainer])
+        },
+        showComponentsByGroup: function (group) {
+            var components = this.components.filter(function (n) {
+                return n.group === group
+            })
+            var componentsTpl = components.map(function (component) {
+                var dragImage = 'data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=='
+                return component.image
+                    ? [
+                        '<div class="cl-component-group-item" draggable="true" data-name="' + component.name + '" data-group="' + component.group + '">',
+                            '<img class="cl-component-group-item-image" src="' + component.image + '"/>',
+                            '<img class="cl-component-group-item-drag" src="' + dragImage + '"/>',
+                        '</div>'
+                    ].join('')
+                    : [
+                        '<div class="cl-component-group-item" draggable="true" data-name="' + component.name + '" data-group="' + component.group + '">',
+                            '<i class="cl-component-group-item-icon iconfont ' + component.icon + '"></i>',
+                            '<span class="cl-component-group-item-span">' + component.label + '</span>',
+                            '<img class="cl-component-group-item-drag" src="' + dragImage + '">',
+                        '</div>'
+                    ].join('')
+            }).join('')
+
+            this.componentContainer.html(componentsTpl)
+        },
+        fillData: function (data) {
+            Page.pages.forEach(function (page) {
+                page.widgets.forEach(function (widget) {
+                    widget.fill({
+                        data: data
+                    })
+                })
+            })
+        },
+        addPage: function () {
+            var page = new Page({ size: this.opts.size })
+            this.wrap.append(page.getElem())
+            return page
+        },
+        getElem: function () {
+            return this.container
+        },
+        remove: function () {
+            this.container.remove()
+        },
+        getData: function () {
+            var data = Page.pages.map(function (page) {
+                return page.widgets.map(function (widget) {
+                    return widget.getOption()
+                })
+            })
+
+            return { config: this.opts, widgets: data }
+        },
+        addWidget: function (page, opts) {
+            var widget = page.addWidget(opts)
+            this.initWidget(widget)
+        },
+        addWidgets: function (page, widgets) {
+            var that = this
+            widgets.forEach(function (widget) {
+                that.addWidget(page, widget)
+            })
+        },
+        addPageWidgets: function (list) {
+            var that = this
+            list.forEach(function (widgets) {
+                var page = that.addPage()
+                that.addWidgets(page, widgets)
+            })
+        },
+        getHtml: function () {
+            var that = this
+            var previewPages = Page.pages.map(function (page) {
+                
+                var widgetsTpl = page.widgets.map(function (widget) {
+                    return widget.getHtml()
+                }).join('')
+                var $previewPage = $('<div class="preview-page">' + widgetsTpl + '</div>')
+                $previewPage.css({
+                    width: that.opts.size[0] + 'mm',
+                    height: that.opts.size[0] + 'mm'
+                })
+
+                return $previewPage.prop('outerHTML')
+            }).join('')
+
+            return [
+                '<!DOCTYPE html>',
+                    '<html lang="en">',
+                    '<head>',
+                        '<meta charset="UTF-8">',
+                        '<title>打印预览</title>',
+                        '<link rel="stylesheet" href="./css/preview.css">',
+                    '</head>',
+                    '<body>' + previewPages + '</body>',
+                '</html>'
+            ].join('')
+        },
+        preview: function () {
+            var opener = window.open('about:blank')
+            opener.document.write(this.getHtml())
+        },
+        clear: function () {
+            Page.pages.forEach(function (page) {
+                page.clear()
+            })
         },
         initWidget: function (widget) {
             var that = this
@@ -410,25 +385,97 @@
         },
         initLayout: function() {
             var that = this
-            that.elem = $([
-                '<div class="cl-page">',
-                    '<a class="cl-page-name">',
-                        '<i>x</i>',
-                        '<span>' + (this._index + 1) + '</span>',
-                    '</a>',
+            that.elem = $('<div class="cl-page"></div>')
+
+            that.container = $('<div class="cl-page-container"></div>')
+            that.container.css({ width: that.opts.size[0] + 'mm', height: that.opts.size[1] + 'mm' })
+
+            that.previewArea = $('<div class="cl-page-preview-area js-hide"></div>')
+            that.previewArea.css({ width: that.opts.size[0] + 'mm', height: that.opts.size[1] + 'mm' })
+
+            that.tools = $([
+                '<div class="cl-page-tools">',
+                    '<input id="picture" type="file">',
+                    '<button class="cl-btn cl-btn-primary cl-radius js-select"><i class="iconfont icon-image"></i></button>',
+                    '<button class="cl-btn cl-btn-danger cl-radius js-unselect"><i class="iconfont icon-image"></i></button>',
+                    '<button class="cl-btn cl-btn-primary cl-radius js-setbg"><i class="iconfont icon-exchange"></i></button>',
+                    '<button class="cl-btn cl-btn-danger cl-radius js-unsetbg"><i class="iconfont icon-exchange"></i></button>',
+                    '<button class="cl-btn cl-btn-default cl-radius js-remove"><i class="iconfont icon-trash"></i></button>',
                 '</div>'
             ].join(''))
-            that.container = $('<div class="cl-page-container"></div>')
+            that.tools.find('button.js-unselect,button.js-setbg,button.js-unsetbg').hide()
 
-            that.container
-                .css({ width: that.opts.size[0] + 'mm', height: that.opts.size[1] + 'mm' })
-                .appendTo(that.elem)
+            that.elem.append([that.container, that.tools, that.previewArea])
         },
         initEvent: function () {
             var that = this
-            that.elem.find('.cl-page-name').on('click', function() {
-                that.remove()
-            })
+            that.tools
+                .on('click', 'button.js-remove', function () {
+                    that.remove()
+                })
+                .on('click', 'button.js-select', function () {
+                    that.tools.find('[type="file"]').trigger('click')
+                })
+                .on('click', 'button.js-unselect', function () {
+                    that.tools.find('button.js-select').show()
+                    that.tools.find('button.js-unselect,button.js-setbg,button.js-unsetbg').hide()
+                    that.previewArea.addClass('js-hide')
+                })
+                .on('change', '[type="file"]', function () {
+                    var picture = new Image()
+                    var pictureFile = document.getElementById('picture')
+
+                    // 获取图片后缀
+                    var ext = this.value.substring(this.value.lastIndexOf('.') + 1).toLowerCase()
+                    if (ext !== 'png' && ext !== 'jpg' && ext !== 'jpeg') {
+                        alert('图片的格式必须为png或者jpg或者jpeg格式！')
+                        return false
+                    }
+
+                    var fileReader = function (file) {
+                        file.select()
+                        file.blur() // 全村的希望
+                        var reallocalpath = document.selection.createRange().text
+                        picture.style.filter = 'progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=\'scale\',src="' + reallocalpath + '")'
+                        picture.style.width = that.opts.size[0] + 'mm'
+                        picture.style.height = that.opts.size[1] + 'mm'
+                        picture.src = 'data:image/bmp;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='
+                    }
+
+                    var html5Reader = function (file) {
+                        var file = file.files[0]
+                        var reader = new FileReader()
+                        reader.readAsDataURL(file)
+                        reader.onload = function (d) {
+                            picture.src = this.result
+                        }
+                    }
+
+                    // 判断ie类型
+                    if (navigator.appName === "Microsoft Internet Explorer" && parseInt(navigator.appVersion.split(";")[1].replace(/[ ]/g, "").replace("MSIE","")) < 10) {
+                        fileReader(pictureFile)
+                    } else {
+                        html5Reader(pictureFile)
+                    }
+
+                    that.tools.find('button.js-select').hide()
+                    that.tools.find('button.js-unselect,button.js-setbg').show()
+                    that.previewArea
+                        .html(picture)
+                        .removeClass('js-hide')
+                        .removeClass('multiply')
+                })
+                .on('click', 'button.js-setbg', function () {
+                    that.tools.find('button.js-setbg').hide()
+                    that.tools.find('button.js-unsetbg').show()
+                    that.previewArea.addClass('multiply')
+                })
+                .on('click', 'button.js-unsetbg', function () {
+                    that.tools.find('button.js-setbg').show()
+                    that.tools.find('button.js-unsetbg').hide()
+                    that.previewArea.removeClass('multiply')
+                })
+
             that.container.on('contextmenu', function (e) {
                 e.preventDefault()
                 e.stopPropagation()
@@ -716,13 +763,18 @@
             this.elem = $([
                 '<div class="cl-widget" data-id="' + this.opts.id + '">',
                     '<div class="cl-widget-drag"></div>',
-                    '<div class="cl-widget-resize"></div>',
                 '</div>'
-            ].join('')).css(this.opts.config.css).data('_id_', this.opts.id)
-            this.btnResize = this.elem.find('.cl-widget-resize')
-            if (!this.opts.option.resize) {
-                this.btnResize.remove()
+            ].join(''))
+            this.btnResize = $('<div class="cl-widget-resize"></div>')
+
+            this.elem
+                .css(this.opts.config.css)
+                .data('_id_', this.opts.id)
+            
+            if (this.opts.option.resize) {
+                this.btnResize.appendTo(this.elem)
             }
+
             this.initEvent()
         },
         onSelected: function () {},
@@ -787,9 +839,11 @@
             return this.originalRender()
         },
         originalRender: function (config) {
-            $.extend(this.opts.config, config)
+            $.extend(this.opts.config, config || {})
+
             this.elem.find(':not(.cl-widget-drag,.cl-widget-resize)').remove()
             this.elem.append(this.opts.render.call(this, this.opts.config))
+
             return this.elem
         },
         update: function (config) {

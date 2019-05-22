@@ -41,13 +41,15 @@
 
 function CreateComponent (opts) {
     var _default = $.extend({
-        type: 'text',
-        name: 'common',
-        group: '常用元素',
-        label: '自定义字段'
+        type: 'default',
+        name: 'default',
+        group: '默认',
+        label: '默认'
     }, opts || {})
 
     /**
+     * @property {string} xLine       - 水平直线
+     * @property {string} yLine       - 垂直直线
      * @property {string} text        - 固定字段
      * @property {string} info        - 商品信息
      * @property {string} date        - 打印日期
@@ -59,32 +61,255 @@ function CreateComponent (opts) {
      * @property {string} resetImage  - 预设图片
      */
     switch (_default.type) {
-        case 'text':
-            return $.extend(true, {}, this.text, _default)
-        case 'info':
-            return $.extend(true, {}, this.info, _default)
-        case 'date':
-            return $.extend(true, {}, this.date, _default)
-        case 'qrcode':
-            return $.extend(true, {}, this.qrcode, _default)
-        case 'barcode':
-            return $.extend(true, {}, this.barcode, _default)
         case 'image':
-            return $.extend(true, {}, this.image, _default)
-        case 'table':
-            return $.extend(true, {}, this.table, _default)
-        case 'declaration':
-            return $.extend(true, {}, this.declaration, _default)
-        case 'resetImage':
-            return $.extend(true, {}, this.resetImage, { config: { data: { imgPath: _default.image } } }, _default)
+            $.extend(_default, {
+                config: {
+                    data: {
+                        imgPath: _default.image || '/img/img_product.jpg'
+                    }
+                }
+            })
+            break
     }
+
+    return $.extend(true, {}, this[_default.type], _default)
 }
 
 CreateComponent.prototype = {
+    xLine: {
+        icon: 'icon-resize-horizontal',
+        config: {
+            data: {},
+            props: {
+                width: {
+                    group: '文字',
+                    label: '宽度',
+                    type: 'text',
+                    value: '100%'
+                },
+                weight: {
+                    group: '文字',
+                    label: '线条粗细',
+                    type: 'select',
+                    option: [
+                        { label: '1px', value: 1 },
+                        { label: '2px', value: 2 },
+                        { label: '3px', value: 3 },
+                        { label: '4px', value: 4 },
+                        { label: '5px', value: 5 },
+                        { label: '6px', value: 6 }
+                    ],
+                    value: 2
+                },
+                style: {
+                    group: '文字', // 属性分类
+                    label: '线条样式',
+                    type: 'select',
+                    option: [
+                        { label: '实线', value: 'solid' },
+                        { label: '虚线', value: 'dashed' },
+                        { label: '点线', value: 'dotted' },
+                        { label: '双实线', value: 'double' }
+                    ],
+                    value: 'solid'
+                }
+            },
+            css: { width: '100%', height: '5px', left: 0 }
+        },
+        option: { resize: false, move: true },
+        render: function (config) {
+            this.css({
+                width: config.props.width.value
+            })
+            var $obj = $('<div class="cl-widget-container"></div>')
+            $obj.css({
+                width: '100%',
+                height: 0,
+                borderTop: config.props.weight.value + 'px ' + config.props.style.value + ' #000',
+                overflow: 'hidden'
+            })
+            return $obj
+        }
+    },
+    yLine: {
+        icon: 'icon-resize-vertical',
+        config: {
+            props: {
+                height: {
+                    group: '文字',
+                    label: '高度',
+                    type: 'text',
+                    value: '100%'
+                },
+                weight: {
+                    group: '文字',
+                    label: '线条粗细',
+                    type: 'select',
+                    option: [
+                        { label: '1px', value: 1 },
+                        { label: '2px', value: 2 },
+                        { label: '3px', value: 3 },
+                        { label: '4px', value: 4 },
+                        { label: '5px', value: 5 },
+                        { label: '5px', value: 6 }
+                    ],
+                    value: 2
+                },
+                style: {
+                    group: '文字', // 属性分类
+                    label: '线条样式',
+                    type: 'select',
+                    option: [
+                        { label: '实线', value: 'solid' },
+                        { label: '虚线', value: 'dashed' },
+                        { label: '点线', value: 'dotted' },
+                        { label: '双实线', value: 'double' }
+                    ],
+                    value: 'solid'
+                }
+            },
+            css: { width: '5px', height: '100%', top: 0 }
+        },
+        option: { resize: false, move: true },
+        render: function (config) {
+            this.css({ height: config.props.height.value })
+            return '<div class="cl-widget-container"><div style="width:0;height:100%;border-left:' + (config.props.weight.value) + 'px ' + (config.props.style.value) + ' #000;overflow:hidden;"></div></div>'
+        }
+    },
+    default: {
+        icon: 'icon-type',
+        config: {
+            data: {
+                text: '自定义文本'
+            },
+            props: {
+                text: {
+                    group: '文字',
+                    label: '文本内容',
+                    type: 'textarea',
+                    value: '文本内容'
+                },
+                content: {
+                    group: '文字', // 属性分类
+                    label: '文本',
+                    type: 'fontStyle',
+                    option: [
+                        'textAlign',
+                        'fontFamily',
+                        'fontSize',
+                        'lineHeight',
+                        'fontWeight'
+                    ],
+                    value: {
+                        visible: true,
+                        css: {
+                            display: 'block',
+                            fontSize: '16px',
+                            fontFamily: 'Helvetica',
+                            textAlign: 'left',
+                            fontWeight: 'normal',
+                            lineHeight: '1',
+                            wordBreak: 'break-all',
+                            whiteSpace: 'pre'
+                        }
+                    }
+                },
+                border: {
+                    group: '边框', // 属性分类
+                    label: '边框',
+                    type: 'border',
+                    value: {
+                        config: {
+                            Top: { disabled: true, border: '0px', padding: '0px' },
+                            Bottom: { disabled: true, border: '0px', padding: '0px' },
+                            Left: { disabled: true, border: '0px', padding: '0px' },
+                            Right: { disabled: true, border: '0px', padding: '0px' }
+                        },
+                        css: {
+                            borderTop: 0,
+                            borderBottom: 0,
+                            borderLeft: 0,
+                            borderRight: 0,
+                            paddingTop: '0px',
+                            paddingBottom: '0px',
+                            paddingLeft: '0px',
+                            paddingRight: '0px'
+                        }
+                    }
+                }
+            },
+            css: { width: '100px', fontSize: '12px' }
+        },
+        render: function (config) {
+            var $elem = $('<div class="cl-widget-container"></div>')
+            var elemCss = $.extend({}, config.props.content.value.css, config.props.border.value.css)
+            $elem
+                .text(config.props.text.value)
+                .css(elemCss)
+            return $elem
+        }
+    },
+    round: {
+        icon: 'icon-circle-o',
+        config: {
+            props: {
+                text: {
+                    group: '文字',
+                    label: '文本内容',
+                    type: 'text',
+                    value: 'A'
+                },
+                fontSize: {
+                    group: '文字',
+                    label: '字体大小',
+                    type: 'select',
+                    option: [
+                        { label: '12px', value: 12 },
+                        { label: '15px', value: 15 },
+                        { label: '18px', value: 18 },
+                        { label: '21px', value: 21 },
+                        { label: '24px', value: 24 }
+                    ],
+                    value: 12
+                },
+                borderWidth: {
+                    group: '文字', // 属性分类
+                    label: '边框粗细',
+                    type: 'select',
+                    option: [
+                        { label: '1px', value: 1 },
+                        { label: '2px', value: 2 },
+                        { label: '3px', value: 3 },
+                        { label: '4px', value: 4 },
+                        { label: '5px', value: 5 }
+                    ],
+                    value: 1
+                }
+            },
+            css: { width: '30px', height: '30px' }
+        },
+        render: function (config) {
+            var width = this.getElem().width()
+            var obj = $('<div class="cl-widget-container">' + config.props.text.value + '</div>')
+
+            this.css({ height: width })
+            obj.css({
+                border: config.props.borderWidth.value + 'px solid #000',
+                borderRadius: '50%',
+                lineHeight: (width - config.props.borderWidth.value * 2) + 'px',
+                fontSize: config.props.fontSize.value + 'px',
+                textAlign: 'center'
+            })
+            return obj
+        }
+    },
     text: {
         icon: 'icon-type',
         config: {
-            data: { text: '固定字段值' },
+            data: {
+                field: 'common',
+                text: '固定字段值'
+            },
             props: {
                 title: {
                     group: '标题',
@@ -170,7 +395,7 @@ CreateComponent.prototype = {
             }
         },
         dataFormat: function (res) {
-            // return res.data[this.name]
+            return res.data[this.name]
         },
         render: function (config) {
             var $elem = $('<div class="cl-widget-container"></div>')
@@ -178,14 +403,15 @@ CreateComponent.prototype = {
 
             $elem.css(elemCss)
 
-            var $title = $('<label data-name="title"></label>')
+            var $title = $('<label></label>')
             $title
                 .toggleClass('js-hide', !config.props.title.value.visible)
                 .text(config.props.title.value.text)
                 .css(config.props.title.value.css)
                 .appendTo($elem)
 
-            var $content = $('<span data-name="content"></span>')
+            var dataName = this.opts.name
+            var $content = $('<eccang data-name="' + dataName + '.' + config.data.field + '"></eccang>')
             $content
                 .text(config.data.text)
                 .appendTo($elem)
@@ -205,7 +431,14 @@ CreateComponent.prototype = {
                     option: ['textAlign', 'fontFamily', 'fontSize', 'lineHeight'],
                     value: {
                         visible: true,
-                        css: { fontSize: '16px', fontFamily: 'Helvetica', textAlign: 'left', fontWeight: 'normal', lineHeight: 'normal' }
+                        css: {
+                            fontSize: '16px',
+                            fontFamily: 'Helvetica',
+                            textAlign: 'left',
+                            fontWeight: 'normal',
+                            lineHeight: 'normal',
+                            wordBreak: 'break-all'
+                        }
                     }
                 },
                 fields: {
@@ -274,12 +507,12 @@ CreateComponent.prototype = {
             $elem.css(elemCss)
 
             var fieldCss = config.props.fieldStyle.value[0].checked
-                ? { paddingRight: '5px', display: 'block' }
-                : { paddingRight: '5px', display: 'inline-block' }
-
+                ? { display: 'block' }
+                : { paddingRight: '5px', display: 'inline' }
+            var dataName = this.opts.name
             $.each(config.props.fields.value, function (index, item) {
                 if (item.checked) {
-                    var $fieldSpan = $('<span></span>')
+                    var $fieldSpan = $('<eccang data-name="' + dataName + '.' + item.name + '"></eccang>')
                     $fieldSpan
                         .text(item.text)
                         .css(fieldCss)
@@ -293,11 +526,6 @@ CreateComponent.prototype = {
     date: {
         icon: 'icon-calendar',
         config: {
-            data: {
-                year: '2019',
-                month: '05',
-                day: '15'
-            },
             props: { // 属性面板配置
                 title: {
                     group: '标题', // 属性分类
@@ -374,32 +602,30 @@ CreateComponent.prototype = {
                 fontSize: '12px'
             }
         },
-        dataFormat: function (res) {
-            return res.data[this.name]
-        },
         render: function (config) {
             var $elem = $('<div class="cl-widget-container"></div>')
             var elemCss = $.extend(config.props.content.value.css, config.props.border.value.css)
-
             $elem.css(elemCss)
 
-            var $title = $('<label data-name="title"></label>')
+            var $title = $('<label></label>')
             $title
                 .toggleClass('js-hide', !config.props.title.value.visible)
                 .text(config.props.title.value.text)
                 .css(config.props.title.value.css)
                 .appendTo($elem)
 
-            var $content = $('<span data-name="content"></span>')
-            var year = config.data.year
-            var month = config.data.month
-            var day = config.data.day
+            var $content = $('<span></span>')
+            var dataName = this.opts.name
+            var d = new Date()
+            var year = '<eccang data-name="' + dataName + '.year">' + d.getFullYear() + '</eccang>'
+            var month = '<eccang data-name="' + dataName + '.month">' + (d.getMonth() + 1) + '</eccang>'
+            var day = '<eccang data-name="' + dataName + '.date">' + (d.getDate() + 1) + '</eccang>'
             var yearVisible = config.props.content.value.yearVisible
             var separator = config.props.content.value.separator
             var contentText = yearVisible ? year + separator : ''
             contentText += month + separator + day
             $content
-                .text(contentText)
+                .html(contentText)
                 .appendTo($elem)
 
             return $elem
@@ -444,14 +670,23 @@ CreateComponent.prototype = {
             return res.data[this.name]
         },
         render: function (config) {
+            var width = this.getElem().width()
             var $elem = $('<div class="cl-widget-container"></div>')
+            this.css({height: width})
 
-            var $qrcode = $('<img src="' + config.data.imgPath + '">')
+            var $qrcode = $('<img>')
             $qrcode
+                .attr('src', config.data.imgPath)
                 .css('width', '100%')
                 .appendTo($elem)
 
-            var $code = $('<p><span>' + config.props.code.value.prefix + '</span><span>888888</span></p>')
+            var dataName = this.opts.name
+            var $code = $([
+                '<p>',
+                    '<span>' + config.props.code.value.prefix + '</span>',
+                    '<eccang data-name="' + dataName + '">888888</eccang>',
+                '</p>'
+            ].join(''))
             $code
                 .toggleClass('js-hide', !config.props.code.value.visible)
                 .css(config.props.code.value.css)
@@ -501,12 +736,19 @@ CreateComponent.prototype = {
         render: function (config) {
             var $elem = $('<div class="cl-widget-container"></div>')
 
-            var $qrcode = $('<img src="' + config.data.imgPath + '">')
+            var $qrcode = $('<img>')
             $qrcode
+                .attr('src', config.data.imgPath)
                 .css('width', '100%')
                 .appendTo($elem)
 
-            var $code = $('<p><span>' + config.props.code.value.prefix + '</span><span>888888</span></p>')
+            var dataName = this.opts.name
+            var $code = $([
+                '<p>',
+                    '<span>' + config.props.code.value.prefix + '</span>',
+                    '<eccang data-name="' + dataName + '">888888</eccang>',
+                '</p>'
+            ].join(''))
             $code
                 .toggleClass('js-hide', !config.props.code.value.visible)
                 .css(config.props.code.value.css)
@@ -554,19 +796,34 @@ CreateComponent.prototype = {
             return res.data[this.name]
         },
         render: function (config) {
-            var $productImg = $('<img src="' + config.data.imgPath + '" style="width: 100%">')
-            var $elem = $('<div class="cl-widget-container"></div>')
-            $elem
-                .css(config.props.border.value.css)
-                .append($productImg)
+            var dataName = this.opts.name
+            var $elem = $('<eccang class="cl-widget-container" data-name="' + dataName + '"></eccang>')
+            $elem.css(config.props.border.value.css)
+
+            var $productImg = $('<img>')
+            $productImg
+                .css('width', '100%')
+                .attr('src', config.data.imgPath)
+                .appendTo($elem)
 
             return $elem
         }
     },
-    resetImage: {
+    localImage: {
+        icon: 'icon-image',
         config: {
-            data: { imgPath: '' },
+            data: { },
             props: {
+                imagePath: {
+                    group: '上传',
+                    label: '本地图片',
+                    type: 'fileUpload',
+                    option: {
+                        maxSize: 1024000,
+                        reg: 'image/\\w+'
+                    },
+                    value: '/img/img_default.jpg'
+                },
                 border: {
                     group: '边框', // 属性分类
                     label: '边框',
@@ -593,18 +850,21 @@ CreateComponent.prototype = {
             },
             css: { // 默认外观信息
                 width: '200px',
+                height: 'auto',
                 fontSize: '12px'
             }
         },
         dataFormat: function (res) {
-            return res.data[this.name]
+            return null
         },
         render: function (config) {
-            var $img = $('<img src="' + config.data.imgPath + '" style="width: 100%;height: 100%">')
             var $elem = $('<div class="cl-widget-container"></div>')
-            $elem
-                .css(config.props.border.value.css)
-                .append($img)
+            var $productImg = $('<img style="width: 100%">')
+            
+            $elem.css(config.props.border.value.css)
+            $productImg
+                .attr('src', config.props.imagePath.value)
+                .appendTo($elem)
 
             return $elem
         }
@@ -665,6 +925,7 @@ CreateComponent.prototype = {
                 }
             },
             css: {
+                left: 0,
                 width: '100%',
                 height: 'auto'
             }
@@ -677,6 +938,7 @@ CreateComponent.prototype = {
             return res.data[this.name]
         },
         render: function (config) {
+            var dataName = this.opts.name
             var $elem = $('<div class="cl-widget-container"></div>')
             var $table = $('<table></table>')
             $table
@@ -720,9 +982,10 @@ CreateComponent.prototype = {
                 var $tr = $('<tr></tr>')
                 $.each(config.props.fields.value || [], function (j, field) {
                     if (field.checked) {
-                        var $td = $('<td>' + item[field.name] + '</td>')
+                        var $td = $('<td></td>')
                         $td
                             .attr('width', field.width || 'auto')
+                            .append('<eccang data-name="' + dataName +'.' + field.name + '">' + item[field.name] + '</eccang>')
                             .appendTo($tr)
                     }
                 })
@@ -818,6 +1081,7 @@ CreateComponent.prototype = {
                 }
             },
             css: {
+                left: 0,
                 width: '100%',
                 height: 'auto'
             }
@@ -830,6 +1094,7 @@ CreateComponent.prototype = {
             return res.data[this.name]
         },
         render: function (config) {
+            var dataName = this.opts.name
             var $elem = $('<div class="cl-widget-container"></div>')
 
             // table
@@ -869,6 +1134,7 @@ CreateComponent.prototype = {
             })
             $tr.appendTo($thead)
             $thead
+                .toggleClass('js-hide', !config.props.thead.value.visible)
                 .css(config.props.thead.value.css)
                 .appendTo($table)
 
@@ -877,17 +1143,15 @@ CreateComponent.prototype = {
             $.each(config.data || [], function (i, item) {
                 var $tr = $('<tr></tr>')
                 $.each(tableRows || [], function (j, row) {
-                    var $td = $('<td></td>')
+                    var $td = $('<td width="' + row.width + '"></td>')
                     if (row.type === 'const') {
                         $td.append('<span style="white-space:pre">' + row.const + '</span>')
                     } else {
                         $.each(row.fields || [], function (k, field) {
-                            $td.append('<span style="padding-right:5px">' + item[field] + '</span>')
+                            $td.append('<eccang data-name="' + dataName +'.' + field + '" style="padding-right:5px">' + item[field] + '</eccang>')
                         })
                     }
-                    $td
-                        .attr('width', row.width)
-                        .appendTo($tr)
+                    $td.appendTo($tr)
                 })
                 $tr.appendTo($tbody)
             })
@@ -899,335 +1163,18 @@ CreateComponent.prototype = {
 }
 
 CustomLabel.addComponents([
-    {
-        name: 'x-line',
-        group: '常用元素',
-        icon: 'icon-resize-horizontal',
-        label: '水平直线',
-        config: {
-            data: {},
-            props: {
-                width: {
-                    group: '文字', // 属性分类
-                    label: '宽度',
-                    type: 'text',
-                    value: '100%'
-                },
-                weight: {
-                    group: '文字', // 属性分类
-                    label: '线条粗细',
-                    type: 'select',
-                    option: [
-                        {
-                            text: '1px',
-                            value: 1
-                        },
-                        {
-                            text: '2px',
-                            value: 2
-                        },
-                        {
-                            text: '3px',
-                            value: 3
-                        },
-                        {
-                            text: '4px',
-                            value: 4
-                        },
-                        {
-                            text: '5px',
-                            value: 5
-                        },
-                        {
-                            text: '6px',
-                            value: 6
-                        }
-                    ],
-                    value: 1
-                },
-                style: {
-                    group: '文字', // 属性分类
-                    label: '线条样式',
-                    type: 'select',
-                    option: [
-                        {
-                            text: '实线',
-                            value: 'solid'
-                        },
-                        {
-                            text: '虚线',
-                            value: 'dashed'
-                        },
-                        {
-                            text: '点线',
-                            value: 'dotted'
-                        },
-                        {
-                            text: '双实线',
-                            value: 'double'
-                        }
-                    ],
-                    value: 'solid'
-                }
-            },
-            css: {
-                width: '100%',
-                height: '5px',
-                left: 0
-            }
-        },
-        option: {
-            resize: false,
-            move: true
-        },
-        render: function (config) {
-            this.css({
-                width: config.props.width.value
-            })
-            var $obj = $('<div class="cl-widget-container"></div>')
-            $obj.css({
-                width: '100%',
-                height: 0,
-                borderTop: config.props.weight.value + 'px ' + config.props.style.value + ' #000',
-                overflow: 'hidden'
-            })
-            return $obj
-        }
-    },
-    {
-        name: 'y-line',
-        group: '常用元素',
-        icon: 'icon-resize-vertical',
-        label: '垂直直线',
-        config: {
-            data: {},
-            props: {
-                height: {
-                    group: '文字', // 属性分类
-                    label: '高度',
-                    type: 'text',
-                    value: '100%'
-                },
-                weight: {
-                    group: '文字', // 属性分类
-                    label: '线条粗细',
-                    type: 'select',
-                    option: [
-                        {
-                            text: '1px',
-                            value: 1
-                        },
-                        {
-                            text: '2px',
-                            value: 2
-                        },
-                        {
-                            text: '3px',
-                            value: 3
-                        },
-                        {
-                            text: '4px',
-                            value: 4
-                        },
-                        {
-                            text: '5px',
-                            value: 5
-                        },
-                        {
-                            text: '5px',
-                            value: 6
-                        }
-                    ],
-                    value: 1
-                },
-                style: {
-                    group: '文字', // 属性分类
-                    label: '线条样式',
-                    type: 'select',
-                    option: [
-                        {
-                            text: '实线',
-                            value: 'solid'
-                        },
-                        {
-                            text: '虚线',
-                            value: 'dashed'
-                        },
-                        {
-                            text: '点线',
-                            value: 'dotted'
-                        },
-                        {
-                            text: '双实线',
-                            value: 'double'
-                        }
-                    ],
-                    value: 'solid'
-                }
-            },
-            css: {
-                width: '5px',
-                height: '100%',
-                top: 0
-            }
-        },
-        option: {
-            resize: false,
-            move: true
-        },
-        render: function (config) {
-            this.css({ height: config.props.height.value })
-            return '<div class="cl-widget-container"><div style="width:0;height:100%;border-left:' + (config.props.weight.value) + 'px ' + (config.props.style.value) + ' #000;overflow:hidden;"></div></div>'
-        }
-    },
-    {
-        name: 'local-text',
-        group: '常用元素', // 组件分类
-        icon: 'icon-type',
-        label: '自定义文本框', // 属性面板名字
-        config: {
-            data: { // 后端接口返回数据
-                text: '自定义文本'
-            },
-            props: { // 属性面板配置
-                text: {
-                    group: '文字', // 属性分类
-                    label: '文本内容',
-                    type: 'text',
-                    value: '文本内容'
-                }
-            },
-            css: { // 默认外观信息
-                width: '100px',
-                fontSize: '12px'
-            }
-        },
-        render: function (config) {
-            var obj = $('<div class="cl-widget-container">' + config.props.text.value + '</div>')
-            return obj
-        }
-    },
-    {
-        name: 'round',
-        group: '常用元素',
-        icon: 'icon-circle-o',
-        label: '圆形框',
-        config: {
-            props: { // 属性面板配置
-                text: {
-                    group: '文字', // 属性分类
-                    label: '文本内容',
-                    type: 'text',
-                    value: 'A'
-                },
-                fontSize: {
-                    group: '文字', // 属性分类
-                    label: '字体大小',
-                    type: 'select',
-                    option: [
-                        {
-                            text: '12px',
-                            value: 12
-                        },
-                        {
-                            text: '15px',
-                            value: 15
-                        },
-                        {
-                            text: '18px',
-                            value: 18
-                        },
-                        {
-                            text: '21px',
-                            value: 21
-                        },
-                        {
-                            text: '24px',
-                            value: 24
-                        }
-                    ],
-                    value: 12
-                },
-                borderWidth: {
-                    group: '文字', // 属性分类
-                    label: '边框粗细',
-                    type: 'select',
-                    option: [
-                        {
-                            text: '1px',
-                            value: 1
-                        },
-                        {
-                            text: '2px',
-                            value: 2
-                        },
-                        {
-                            text: '3px',
-                            value: 3
-                        },
-                        {
-                            text: '4px',
-                            value: 4
-                        },
-                        {
-                            text: '5px',
-                            value: 5
-                        }
-                    ],
-                    value: 1
-                }
-            },
-            css: { // 默认外观信息
-                width: '30px',
-                height: '30px'
-            }
-        },
-        render: function (config) {
-            var width = this.getElem().width()
-            var obj = $('<div class="cl-widget-container">' + config.props.text.value + '</div>')
-
-            this.css({ height: width })
-            obj.css({
-                border: config.props.borderWidth.value + 'px solid #000',
-                borderRadius: '50%',
-                lineHeight: (width - config.props.borderWidth.value * 2) + 'px',
-                fontSize: config.props.fontSize.value + 'px',
-                textAlign: 'center'
-            })
-            return obj
-        }
-    },
-    {
-        name: 'image',
-        group: '常用元素',
-        icon: 'icon-image',
-        label: '本地图片',
-        config: {
-            props: { // 属性面板配置
-                src: {
-                    group: '文字', // 属性分类
-                    label: '图片地址',
-                    type: 'text',
-                    value: './img/img_default.jpg'
-                }
-            },
-            css: { // 默认外观信息
-                width: '133px',
-                height: '95px'
-            }
-        },
-        render: function (config) {
-            var obj = $('<div class="cl-widget-container"><img style="width: 100%;height: 100%;display: block;" src="' + config.props.src.value + '"></div>')
-            return obj
-        }
-    },
-    new CreateComponent({ type: 'text', name: 'common', label: 'text-固定字段' }),
-    new CreateComponent({ type: 'date', name: 'date', label: 'date-打印日期' }),
-    new CreateComponent({ type: 'image', name: 'productImage', label: 'image-商品图片' }),
-    new CreateComponent({ type: 'qrcode', name: 'qrcode', label: 'qrcode-商品二维码' }),
-    new CreateComponent({ type: 'barcode', name: 'barcode', label: 'barcode-商品条形码' }),
-    new CreateComponent({ type: 'resetImage', name: 'reset-01', image: './img/TagPictures/tag01.jpg' }),
-    new CreateComponent({ type: 'info', name: 'sender-info', label: 'info-地址信息' }),
-    new CreateComponent({ type: 'table', name: 'table-01', label: 'table-普通表格' }),
-    new CreateComponent({ type: 'declaration', name: 'table-02', label: 'table-报关物品' })
+    new CreateComponent({ group: '构图元素', type: 'xLine', name: 'x-line', label: 'xLine - 水平直线' }),
+    new CreateComponent({ group: '构图元素', type: 'yLine', name: 'y-line', label: 'yLine - 垂直直线' }),
+    new CreateComponent({ group: '构图元素', type: 'default', name: 'custom-text', label: 'default - 自定义文本框' }),
+    new CreateComponent({ group: '构图元素', type: 'round', name: 'round', label: 'round - 圆形框' }),
+    new CreateComponent({ type: 'text', name: 'common', label: 'text - 固定字段' }),
+    new CreateComponent({ type: 'date', name: 'date', label: 'date - 打印日期' }),
+    new CreateComponent({ type: 'qrcode', name: 'qrcode', label: 'qrcode - 商品二维码' }),
+    new CreateComponent({ type: 'barcode', name: 'barcode', label: 'barcode - 商品条形码' }),
+    new CreateComponent({ type: 'info', name: 'sender-info', label: 'info - 地址信息' }),
+    new CreateComponent({ type: 'table', name: 'table-01', label: 'table - 普通表格' }),
+    new CreateComponent({ type: 'declaration', name: 'table-02', label: 'declaration - 报关物品' }),
+    new CreateComponent({ group: '构图元素', type: 'localImage', name: 'image-01', label: 'localImage - 本地图片' }),
+    new CreateComponent({ type: 'image', name: 'image-02', label: 'image - 商品图片' }),
+    new CreateComponent({ type: 'image', name: 'image-03', image: './img/TagPictures/tag01.jpg' }),
 ])
