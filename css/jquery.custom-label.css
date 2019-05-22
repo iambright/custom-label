@@ -385,11 +385,11 @@
 }
 .cl-page-tools .cl-btn {
     display: block;
+    margin-bottom: 10px;
 }
-.cl-page-tools .cl-btn + .cl-btn {
-    margin-top: 10px;
+.cl-page-tools .cl-btn:last-child {
+    margin-bottom: 0;
 }
-
 
 .cl-widget {
     position: absolute;
