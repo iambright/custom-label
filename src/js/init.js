@@ -36,7 +36,7 @@ $(function () {
         headers : { 'token': 'tag_tool' },
         dataType: 'json',
         error: function (res) {
-            alert(res.message)
+            alert(res.message || '网络连接错误！')
         }
     })
 
