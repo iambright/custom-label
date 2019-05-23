@@ -26,7 +26,7 @@ $(function () {
                 configs: JSON.stringify(data.widgets),
                 formData: customLabel.getHtml()
             }
-            console.log(postData)
+            console.log(JSON.stringify(postData))
             // TODO 保存
         }
     }
@@ -75,8 +75,13 @@ $(function () {
         })
         .on('click', '.btn-fill-data', function () {
             // 填充实例
-            $.get('./data/data.json?random=' + Math.random()).then(function (data) {
-                customLabel.fillData(data)
+            $.ajax({
+                method: 'GET',
+                url: '/api/data',
+                data: {},
+                success: function (res) {
+                    customLabel.fillData(res)
+                }
             })
         })
         .on('click', '.btn-get-data', function () {
