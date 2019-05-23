@@ -119,6 +119,7 @@ $(function () {
             }
 
             init({
+                id: 1,
                 name: name,
                 type: typeName,
                 typeID: typeID,

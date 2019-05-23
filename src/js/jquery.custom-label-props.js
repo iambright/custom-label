@@ -4,8 +4,6 @@
 
 //= ===========自定义属性面板字段=======================================================
 
-var host = 'http://169.254.113.220:8000'
-
 // 输入框
 CustomLabel.addPropsPanelField('text', function (data, update) {
     var $elem = $([
@@ -643,23 +641,23 @@ CustomLabel.addPropsPanelField('fileUpload', function (prop, update) {
                 //文件格式过滤
                 var reg = new RegExp(option.reg, 'i')
                 if(option.reg && !reg.test(files[0].type)){
-                    console.log('请上传正确类型的文件')
+                    alert('请上传正确类型的文件')
                     return false
                 }
 
                 $.ajaxFileUpload({
-                    url: host + '/api/upload_img',
+                    url: '/api/upload_img',
                     secureuri: false,
                     fileElementId: 'templetfile',
                     dataType: 'json',
                     success: function (data, status) {
                         console.log('上传成功')
-                        $preview.attr('src', host + data.path)
+                        $preview.attr('src', data.path)
                         update(data.path)
                     },
                     error: function (data, status, e) {
                         alert('上传失败，以下测试数据')
-                        $preview.attr('src', host + '/img/img_product.jpg')
+                        $preview.attr('src', '/img/img_product.jpg')
                         update('/img/img_product.jpg')
                     }
                 })
@@ -669,7 +667,7 @@ CustomLabel.addPropsPanelField('fileUpload', function (prop, update) {
         })
 
     $preview = $('<img>')
-        .attr('src', value ? host + '/' + value : '/img/img_default.jpg')
+        .attr('src', value ? value : '/img/img_default.jpg')
         .css('width', '100%')
 
     var $elem = $('<div></div>')
