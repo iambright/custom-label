@@ -65,7 +65,7 @@ function CreateComponent (opts) {
             $.extend(_default, {
                 config: {
                     data: {
-                        imgPath: _default.image || '/img/img_product.jpg'
+                        imgPath: _default.image || './img/img_product.jpg'
                     }
                 }
             })
@@ -630,7 +630,7 @@ CreateComponent.prototype = {
     qrcode: {
         icon: 'icon-qr-code',
         config: {
-            data: { imgPath: '/img/img_qrcode.png' },
+            data: { imgPath: './img/img_qrcode.png' },
             props: {
                 code: {
                     group: '代码',
@@ -693,7 +693,7 @@ CreateComponent.prototype = {
     barcode: {
         icon: 'icon-bar-code',
         config: {
-            data: { imgPath: '/img/img_barcode.jpg' },
+            data: { imgPath: './img/img_barcode.jpg' },
             props: {
                 code: {
                     group: '代码', // 属性分类
@@ -750,7 +750,7 @@ CreateComponent.prototype = {
     image: {
         icon: 'icon-image',
         config: {
-            data: { imgPath: '/img/img_product.jpg' },
+            data: { imgPath: './img/img_product.jpg' },
             props: {
                 border: {
                     group: '边框', // 属性分类
@@ -848,7 +848,7 @@ CreateComponent.prototype = {
         render: function (config) {
             var $productImg = $('<img>')
                 .css('width', '100%')
-                .attr('src', config.props.imagePath.value ? config.props.imagePath.value : '/img/img_default.jpg')
+                .attr('src', config.props.imagePath.value ? config.props.imagePath.value : './img/img_default.jpg')
             
             var $elem = $('<div class="cl-widget-container"></div>')
                 .append([$productImg])

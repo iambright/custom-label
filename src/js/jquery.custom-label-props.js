@@ -657,8 +657,8 @@ CustomLabel.addPropsPanelField('fileUpload', function (prop, update) {
                     },
                     error: function (data, status, e) {
                         alert('上传失败，以下测试数据')
-                        $preview.attr('src', '/img/img_product.jpg')
-                        update('/img/img_product.jpg')
+                        $preview.attr('src', './img/img_product.jpg')
+                        update('./img/img_product.jpg')
                     }
                 })
             } else {
@@ -667,7 +667,7 @@ CustomLabel.addPropsPanelField('fileUpload', function (prop, update) {
         })
 
     $preview = $('<img>')
-        .attr('src', value ? value : '/img/img_default.jpg')
+        .attr('src', value ? value : './img/img_default.jpg')
         .css('width', '100%')
 
     var $elem = $('<div></div>')
