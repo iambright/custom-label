@@ -1,0 +1,17 @@
+{
+    "data": {
+        "id": 1,
+        "temp_group_id": 1,
+        "temp_group_name": "\u5730\u5740\u6807\u7b7e",
+        "name": "wwhyes",
+        "width": 100,
+        "height": 100,
+        "configs": "[[{\"name\":\"round\",\"config\":{\"props\":{\"text\":\"A\",\"fontSize\":12,\"borderWidth\":1},\"css\":{\"width\":\"30px\",\"height\":\"30px\",\"left\":123,\"top\":132}}},{\"name\":\"custom-text\",\"config\":{\"data\":{\"text\":\"\u81ea\u5b9a\u4e49\u6587\u672c\"},\"props\":{\"text\":\"\u6587\u672c\u5185\u5bb9\",\"content\":{\"visible\":true,\"css\":{\"display\":\"block\",\"fontSize\":\"16px\",\"fontFamily\":\"Helvetica\",\"textAlign\":\"left\",\"fontWeight\":\"normal\",\"lineHeight\":\"1\",\"wordBreak\":\"break-all\",\"whiteSpace\":\"pre\"}},\"border\":{\"config\":{\"Top\":{\"disabled\":true,\"border\":\"0px\",\"padding\":\"0px\"},\"Bottom\":{\"disabled\":true,\"border\":\"0px\",\"padding\":\"0px\"},\"Left\":{\"disabled\":true,\"border\":\"0px\",\"padding\":\"0px\"},\"Right\":{\"disabled\":true,\"border\":\"0px\",\"padding\":\"0px\"}},\"css\":{\"borderTop\":0,\"borderBottom\":0,\"borderLeft\":0,\"borderRight\":0,\"paddingTop\":\"0px\",\"paddingBottom\":\"0px\",\"paddingLeft\":\"0px\",\"paddingRight\":\"0px\"}}},\"css\":{\"width\":\"100px\",\"fontSize\":\"12px\",\"left\":220,\"top\":97}}}]]",
+        "temp_html": ""
+    },
+    "meta": {
+        "message": "\u83b7\u53d6\u6210\u529f",
+        "status": "success",
+        "status_code": 200
+    }
+}

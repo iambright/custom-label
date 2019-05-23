@@ -199,7 +199,6 @@ jQuery.extend({
       // you have to delete the '<pre></pre>' tag.
       // The pre tag in Chrome has attribute, so have to use regex to remove
       var data = r.responseText;
-      console.log(data);
       var rx = new RegExp("<pre.*?>(.*?)</pre>", "i");
       var am = rx.exec(data);
       //this is the desired data extracted

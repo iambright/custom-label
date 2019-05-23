@@ -118,17 +118,15 @@ CreateComponent.prototype = {
         },
         option: { resize: false, move: true },
         render: function (config) {
-            this.css({
-                width: config.props.width.value
-            })
-            var $obj = $('<div class="cl-widget-container"></div>')
-            $obj.css({
-                width: '100%',
-                height: 0,
-                borderTop: config.props.weight.value + 'px ' + config.props.style.value + ' #000',
-                overflow: 'hidden'
-            })
-            return $obj
+            this.css({ width: config.props.width.value })
+            var $elem = $('<div class="cl-widget-container"></div>')
+                .css({
+                    width: '100%',
+                    height: 0,
+                    borderTop: config.props.weight.value + 'px ' + config.props.style.value + ' #000',
+                    overflow: 'hidden'
+                })
+            return $elem
         }
     },
     yLine: {
@@ -173,7 +171,14 @@ CreateComponent.prototype = {
         option: { resize: false, move: true },
         render: function (config) {
             this.css({ height: config.props.height.value })
-            return '<div class="cl-widget-container"><div style="width:0;height:100%;border-left:' + (config.props.weight.value) + 'px ' + (config.props.style.value) + ' #000;overflow:hidden;"></div></div>'
+            var $elem = $('<div class="cl-widget-container"></div>')
+                .css({
+                    width: 0,
+                    height: '100%',
+                    borderLeft: config.props.weight.value + 'px ' + config.props.style.value + ' #000',
+                    overflow: 'hidden'
+                })
+            return $elem
         }
     },
     default: {
@@ -241,9 +246,8 @@ CreateComponent.prototype = {
             css: { width: '100px', fontSize: '12px' }
         },
         render: function (config) {
-            var $elem = $('<div class="cl-widget-container"></div>')
             var elemCss = $.extend({}, config.props.content.value.css, config.props.border.value.css)
-            $elem
+            var $elem = $('<div class="cl-widget-container"></div>')
                 .text(config.props.text.value)
                 .css(elemCss)
             return $elem
@@ -290,17 +294,17 @@ CreateComponent.prototype = {
         },
         render: function (config) {
             var width = this.getElem().width()
-            var obj = $('<div class="cl-widget-container">' + config.props.text.value + '</div>')
-
             this.css({ height: width })
-            obj.css({
-                border: config.props.borderWidth.value + 'px solid #000',
-                borderRadius: '50%',
-                lineHeight: (width - config.props.borderWidth.value * 2) + 'px',
-                fontSize: config.props.fontSize.value + 'px',
-                textAlign: 'center'
-            })
-            return obj
+
+            var $elem = $('<div class="cl-widget-container">' + config.props.text.value + '</div>')
+                .css({
+                    border: config.props.borderWidth.value + 'px solid #000',
+                    borderRadius: '50%',
+                    lineHeight: (width - config.props.borderWidth.value * 2) + 'px',
+                    fontSize: config.props.fontSize.value + 'px',
+                    textAlign: 'center'
+                })
+            return $elem
         }
     },
     text: {
@@ -398,23 +402,18 @@ CreateComponent.prototype = {
             return res.data[this.name]
         },
         render: function (config) {
-            var $elem = $('<div class="cl-widget-container"></div>')
-            var elemCss = $.extend(config.props.content.value.css, config.props.border.value.css)
-
-            $elem.css(elemCss)
-
             var $title = $('<label></label>')
-            $title
                 .toggleClass('js-hide', !config.props.title.value.visible)
                 .text(config.props.title.value.text)
                 .css(config.props.title.value.css)
-                .appendTo($elem)
 
-            var dataName = this.opts.name
-            var $content = $('<eccang data-name="' + dataName + '.' + config.data.field + '"></eccang>')
-            $content
+            var $content = $('<eccang data-name="' + this.opts.name + '.' + config.data.field + '"></eccang>')
                 .text(config.data.text)
-                .appendTo($elem)
+
+            var elemCss = $.extend(config.props.content.value.css, config.props.border.value.css)
+            var $elem = $('<div class="cl-widget-container"></div>')
+                .css(elemCss)
+                .append([$title, $content])
 
             return $elem
         }
@@ -502,18 +501,17 @@ CreateComponent.prototype = {
             return res.data.userInfo
         },
         render: function (config) {
-            var $elem = $('<div class="cl-widget-container"></div>')
             var elemCss = $.extend(config.props.content.value.css, config.props.border.value.css)
-            $elem.css(elemCss)
+            var $elem = $('<div class="cl-widget-container"></div>')
+                .css(elemCss)
 
             var fieldCss = config.props.fieldStyle.value[0].checked
                 ? { display: 'block' }
                 : { paddingRight: '5px', display: 'inline' }
-            var dataName = this.opts.name
+            var dateName = this.opts.name
             $.each(config.props.fields.value, function (index, item) {
                 if (item.checked) {
-                    var $fieldSpan = $('<eccang data-name="' + dataName + '.' + item.name + '"></eccang>')
-                    $fieldSpan
+                    $('<eccang data-name="' + dateName + '.' + item.name + '"></eccang>')
                         .text(item.text)
                         .css(fieldCss)
                         .appendTo($elem)
@@ -603,18 +601,12 @@ CreateComponent.prototype = {
             }
         },
         render: function (config) {
-            var $elem = $('<div class="cl-widget-container"></div>')
-            var elemCss = $.extend(config.props.content.value.css, config.props.border.value.css)
-            $elem.css(elemCss)
-
             var $title = $('<label></label>')
-            $title
                 .toggleClass('js-hide', !config.props.title.value.visible)
                 .text(config.props.title.value.text)
                 .css(config.props.title.value.css)
-                .appendTo($elem)
 
-            var $content = $('<span></span>')
+            
             var dataName = this.opts.name
             var d = new Date()
             var year = '<eccang data-name="' + dataName + '.year">' + d.getFullYear() + '</eccang>'
@@ -624,9 +616,13 @@ CreateComponent.prototype = {
             var separator = config.props.content.value.separator
             var contentText = yearVisible ? year + separator : ''
             contentText += month + separator + day
-            $content
+            var $content = $('<span></span>')
                 .html(contentText)
-                .appendTo($elem)
+
+            var elemCss = $.extend(config.props.content.value.css, config.props.border.value.css)
+            var $elem = $('<div class="cl-widget-container"></div>')
+                .css(elemCss)
+                .append([$title, $content])
 
             return $elem
         }
@@ -671,26 +667,25 @@ CreateComponent.prototype = {
         },
         render: function (config) {
             var width = this.getElem().width()
-            var $elem = $('<div class="cl-widget-container"></div>')
-            this.css({height: width})
+            var height = config.props.code.value.visible
+                ? width + 20
+                : width
+            this.css({ height: height })
 
             var $qrcode = $('<img>')
-            $qrcode
                 .attr('src', config.data.imgPath)
                 .css('width', '100%')
-                .appendTo($elem)
 
-            var dataName = this.opts.name
-            var $code = $([
-                '<p>',
+            var $code = $('<p></p>')
+                .append([
                     '<span>' + config.props.code.value.prefix + '</span>',
-                    '<eccang data-name="' + dataName + '">888888</eccang>',
-                '</p>'
-            ].join(''))
-            $code
+                    '<eccang data-name="' + this.opts.name + '">888888</eccang>'
+                ])
                 .toggleClass('js-hide', !config.props.code.value.visible)
                 .css(config.props.code.value.css)
-                .appendTo($elem)
+            
+            var $elem = $('<div class="cl-widget-container"></div>')
+                .append([$qrcode, $code])
 
             return $elem
         }
@@ -734,25 +729,20 @@ CreateComponent.prototype = {
             return res.data[this.name]
         },
         render: function (config) {
-            var $elem = $('<div class="cl-widget-container"></div>')
-
-            var $qrcode = $('<img>')
-            $qrcode
+            var $barcode = $('<img>')
                 .attr('src', config.data.imgPath)
                 .css('width', '100%')
-                .appendTo($elem)
 
-            var dataName = this.opts.name
-            var $code = $([
-                '<p>',
+            var $code = $('<p></p>')
+                .append([
                     '<span>' + config.props.code.value.prefix + '</span>',
-                    '<eccang data-name="' + dataName + '">888888</eccang>',
-                '</p>'
-            ].join(''))
-            $code
+                    '<eccang data-name="' + this.opts.name + '">888888</eccang>'
+                ])
                 .toggleClass('js-hide', !config.props.code.value.visible)
                 .css(config.props.code.value.css)
-                .appendTo($elem)
+            
+            var $elem = $('<div class="cl-widget-container"></div>')
+                .append([$barcode, $code])
 
             return $elem
         }
@@ -796,15 +786,13 @@ CreateComponent.prototype = {
             return res.data[this.name]
         },
         render: function (config) {
-            var dataName = this.opts.name
-            var $elem = $('<eccang class="cl-widget-container" data-name="' + dataName + '"></eccang>')
-            $elem.css(config.props.border.value.css)
-
             var $productImg = $('<img>')
-            $productImg
                 .css('width', '100%')
                 .attr('src', config.data.imgPath)
-                .appendTo($elem)
+            
+            var $elem = $('<eccang class="cl-widget-container" data-name="' + this.opts.name + '"></eccang>')
+                .append([$productImg])
+                .css(config.props.border.value.css)
 
             return $elem
         }
@@ -822,7 +810,7 @@ CreateComponent.prototype = {
                         maxSize: 1024000,
                         reg: 'image/\\w+'
                     },
-                    value: '/img/img_default.jpg'
+                    value: ''
                 },
                 border: {
                     group: '边框', // 属性分类
@@ -858,13 +846,13 @@ CreateComponent.prototype = {
             return null
         },
         render: function (config) {
-            var $elem = $('<div class="cl-widget-container"></div>')
-            var $productImg = $('<img style="width: 100%">')
+            var $productImg = $('<img>')
+                .css('width', '100%')
+                .attr('src', config.props.imagePath.value ? config.props.imagePath.value : '/img/img_default.jpg')
             
-            $elem.css(config.props.border.value.css)
-            $productImg
-                .attr('src', config.props.imagePath.value)
-                .appendTo($elem)
+            var $elem = $('<div class="cl-widget-container"></div>')
+                .append([$productImg])
+                .css(config.props.border.value.css)
 
             return $elem
         }
@@ -939,42 +927,23 @@ CreateComponent.prototype = {
         },
         render: function (config) {
             var dataName = this.opts.name
-            var $elem = $('<div class="cl-widget-container"></div>')
-            var $table = $('<table></table>')
-            $table
-                .css({
-                    width: '100%',
-                    textAlign: 'center',
-                    wordbreak: 'break-all',
-                    tableLayout: 'fixed',
-                    borderCollapse: 'collapse'
-                })
-                .attr({
-                    border: config.props.tableBorder.value ? 1 : 0,
-                    cellpadding: 0,
-                    cellspacing: 0
-                })
-                .appendTo($elem)
-            var tdLength = 0
 
             // thead
-            var $thead = $('<thead></thead>')
             var $theadTr = $('<tr></tr>')
+            var tdLength = 0
             $.each(config.props.fields.value || [], function (index, field) {
                 if (field.checked) {
                     tdLength++
-                    var $theadTh = $('<th>' + field.text + '</th>')
-                    $theadTh
+                    $('<th>' + field.text + '</th>')
                         .attr('width', field.width || 'auto')
                         .css('overflow', 'hidden')
                         .appendTo($theadTr)
                 }
             })
-            $thead
+            var $thead = $('<thead></thead>')
                 .toggleClass('js-hide', !config.props.thead.value.visible)
                 .css(config.props.thead.value.css)
                 .append($theadTr)
-                .appendTo($table)
 
             // tbody
             var $tbody = $('<tbody></tbody>')
@@ -991,14 +960,30 @@ CreateComponent.prototype = {
                 })
                 $tr.appendTo($tbody)
             })
-            $tbody.appendTo($table)
 
             // tfoot
             var $tfoot = $('<tfoot><tr><td colspan="' + tdLength + '">' + config.props.tfoot.value.text + '</td></tr></tfoot>')
-            $tfoot
                 .toggleClass('js-hide', !config.props.tfoot.value.visible)
                 .css(config.props.tfoot.value.css)
-                .appendTo($table)
+
+            // table
+            var $table = $('<table></table>')
+                .append([$thead, $tbody, $tfoot])
+                .css({
+                    width: '100%',
+                    textAlign: 'center',
+                    wordbreak: 'break-all',
+                    tableLayout: 'fixed',
+                    borderCollapse: 'collapse'
+                })
+                .attr({
+                    border: config.props.tableBorder.value ? 1 : 0,
+                    cellpadding: 0,
+                    cellspacing: 0
+                })
+
+            var $elem = $('<div class="cl-widget-container"></div>')
+                .append([$table])
 
             return $elem
         }
@@ -1095,25 +1080,6 @@ CreateComponent.prototype = {
         },
         render: function (config) {
             var dataName = this.opts.name
-            var $elem = $('<div class="cl-widget-container"></div>')
-
-            // table
-            var $table = $('<table></table>')
-            $table
-                .css({
-                    width: '100%',
-                    textAlign: 'center',
-                    wordbreak: 'break-all',
-                    // tableLayout: 'fixed',
-                    borderCollapse: 'collapse'
-                })
-                .attr({
-                    border: config.props.tableBorder.value ? 1 : 0,
-                    cellpadding: 0,
-                    cellspacing: 0
-                })
-                .appendTo($elem)
-
             var tableRows = []
             $.each(config.props, function (key, item) {
                 if (item.type === 'tableRow') {
@@ -1122,21 +1088,18 @@ CreateComponent.prototype = {
             })
 
             // thead
-            var $thead = $('<thead></thead>')
-            var $tr = $('<tr></tr>')
+            var $theadTr = $('<tr></tr>')
             $.each(tableRows || [], function (key, row) {
-                var $th = $('<th></th>')
-                $th
+                $('<th></th>')
                     .text(row.text)
                     .attr('width', row.width)
                     .css('white-space', 'pre')
-                    .appendTo($tr)
+                    .appendTo($theadTr)
             })
-            $tr.appendTo($thead)
-            $thead
+            $thead = $('<thead></thead>')
+                .append([$theadTr])
                 .toggleClass('js-hide', !config.props.thead.value.visible)
                 .css(config.props.thead.value.css)
-                .appendTo($table)
 
             // tbody
             var $tbody = $('<tbody></tbody>')
@@ -1155,7 +1118,25 @@ CreateComponent.prototype = {
                 })
                 $tr.appendTo($tbody)
             })
-            $tbody.appendTo($table)
+
+            // table
+            var $table = $('<table></table>')
+                .append([$thead, $tbody])
+                .css({
+                    width: '100%',
+                    textAlign: 'center',
+                    wordbreak: 'break-all',
+                    // tableLayout: 'fixed',
+                    borderCollapse: 'collapse'
+                })
+                .attr({
+                    border: config.props.tableBorder.value ? 1 : 0,
+                    cellpadding: 0,
+                    cellspacing: 0
+                })
+
+            var $elem = $('<div class="cl-widget-container"></div>')
+                .append([$table])
 
             return $elem
         }

@@ -7,17 +7,32 @@
     <link rel="stylesheet" href="css/preview.css">
     <link rel="stylesheet" href="css/jquery.custom-label.css">
     <link rel="stylesheet" href="css/jquery.modal.css">
+    <style>
+        #initForm {
+            padding: 0;
+        }
+        .test-menu {
+            background-color: rgba(0, 0, 0, .3);
+            position: absolute;
+            z-index: 1;
+            bottom: 0;
+            right: 0;
+            padding: 10px 15px;
+            overflow: hidden;
+        }
+        .test-menu button {
+            margin: 0 10px;
+            display: inline-block;
+        }
+    </style>
 </head>
 <body>
-    <div class="top-menu">
+    <div class="test-menu">
         <button class="btn-add-new">初始化</button>
-        <button class="btn-remove">删除</button>
-        <button class="btn-add-new-by-config">创建实例</button>
+        <button class="btn-add-new-by-config">加载数据</button>
         <button class="btn-fill-data">填充实例</button>
         <button class="btn-get-html">获取HTML</button>
         <button class="btn-get-data">获取模板</button>
-        <button class="btn-finish">打印</button>
-        <button class="btn-reload">刷新</button>
     </div>
     <form class="modal" id="initForm">
         <div class="modal__hd">
@@ -28,20 +43,20 @@
                 <div class="cl-form-group">
                     <label class="cl-form-group-label">模板名称：</label>
                     <div class="cl-form-control">
-                        <input class="cl-input" type="text" name="name">
+                        <input class="cl-input" type="text" name="name" value="默认名字">
                     </div>
                 </div>
                 <div class="cl-form-group">
                     <label class="cl-form-group-label">模板类型：</label>
                     <div class="cl-form-control">
-                        <select class="cl-select" name="type">
-                            <option value="地址标签">地址标签</option>
-                            <option value="报关单">报关单</option>
-                            <option value="配货标签">配货标签</option>
-                            <option value="发票">发票</option>
-                            <option value="SKU标签">SKU标签</option>
-                            <option value="FBA标签">FBA标签</option>
-                            <option value="库位标签">库位标签</option>
+                        <select class="cl-select" name="typeID">
+                            <option value="1">地址标签</option>
+                            <option value="2">报关单</option>
+                            <option value="3">配货标签</option>
+                            <option value="4">发票</option>
+                            <option value="5">SKU标签</option>
+                            <option value="6">FBA标签</option>
+                            <option value="7">库位标签</option>
                         </select>
                     </div>
                 </div>

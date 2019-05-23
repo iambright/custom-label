@@ -54,16 +54,16 @@
             this.opts = opts || this.opts
             this.container = $('<div class="cl-container"></div>')
 
-            this.topMenu = $('<div class="cl-top-menu"></div>')
-            this.initTopMenuLayout()
-
             this.leftMenu = $('<div class="cl-left-menu"></div>')
             this.initLeftMenuLayout()
+
+            this.topMenu = $('<div class="cl-top-menu"></div>')
+            this.initTopMenuLayout()
 
             this.propPanel = $('<div class="cl-props"></div>')
             this.wrap = $('<div class="cl-wrap"></div>')
             
-            this.container.append([this.topMenu, this.leftMenu, this.propPanel, this.wrap])
+            this.container.append([this.leftMenu, this.topMenu, this.propPanel, this.wrap])
         },
         initEvent: function () {
             var that = this
@@ -82,6 +82,9 @@
                 .on('click', 'button.btn-save', function () { // 保存
                     var data = that.getData()
                     that.onSave(data)
+                })
+                .on('keyup', 'input[name="name"]', function () {
+                    that.opts.name = this.value
                 })
 
             // Init Component Select Event
@@ -160,12 +163,25 @@
         },
         initTopMenuLayout: function () {
             this.topMenu.html([
-                '<label>模板名称</label>',
-                '<span>' + this.opts.name + '</span>',
-                '<label>模板类型</label>',
-                '<span>' + this.opts.type + '</span>',
-                '<label>规格尺寸</label>',
-                '<span>' + this.opts.size[0] + 'mm*' + this.opts.size[1] + 'mm</span>',
+                '<div class="cl-inline-block" style="margin-left: 15px;vertical-align: -10px;">',
+                    '<div class="cl-input-group">',
+                        '<div class="cl-input-group-addon">模板名称</div>',
+                        '<input class="cl-input" type="text" name="name" value="' + this.opts.name + '" disabled>',
+                    '</div>',
+                '</div>',
+                '<div class="cl-inline-block" style="margin-left: 15px;vertical-align: -10px;">',
+                    '<div class="cl-input-group">',
+                        '<div class="cl-input-group-addon">模板类型</div>',
+                        '<input class="cl-input" type="text" name="type" value="' + this.opts.type + '" disabled>',
+                    '</div>',
+                '</div>',
+                '<div class="cl-inline-block" style="margin-left: 15px;vertical-align: -10px;">',
+                    '<div class="cl-input-group">',
+                        '<div class="cl-input-group-addon">尺寸</div>',
+                        '<input class="cl-input" type="text" name="size" value="' + this.opts.size[0] + ' x ' + this.opts.size[1] + '" style="width: 90px;text-align: center;" disabled>',
+                        '<div class="cl-input-group-addon">mm</div>',
+                    '</div>',
+                '</div>',
                 '<div class="cl-top-menu-btn">',
                     '<button class="cl-btn cl-btn-primary cl-radius btn-add">新增页面</button>',
                     '<button class="cl-btn cl-btn-primary cl-radius btn-preview"><i class="iconfont icon-print cl-mr10"></i>打印</button>',
@@ -221,6 +237,10 @@
                     })
                 })
             })
+        },
+        onSave: function (data) {
+            console.log('onSave:', data)
+            // TODO: 保存信息
         },
         addPage: function () {
             var page = new Page({ size: this.opts.size })
@@ -388,23 +408,22 @@
             that.elem = $('<div class="cl-page"></div>')
 
             that.container = $('<div class="cl-page-container"></div>')
-            that.container.css({ width: that.opts.size[0] + 'mm', height: that.opts.size[1] + 'mm' })
+                .css({ width: that.opts.size[0] + 'mm', height: that.opts.size[1] + 'mm' })
 
             that.previewArea = $('<div class="cl-page-preview-area js-hide"></div>')
-            that.previewArea.css({ width: that.opts.size[0] + 'mm', height: that.opts.size[1] + 'mm' })
+                .css({ width: that.opts.size[0] + 'mm', height: that.opts.size[1] + 'mm' })
 
-            that.tools = $([
-                '<div class="cl-page-tools">',
+            that.tools = $('<div class="cl-page-tools"></div>')
+                .append([
                     '<input id="picture" type="file">',
                     '<button class="cl-btn cl-btn-primary cl-radius js-select"><i class="iconfont icon-image"></i></button>',
-                    '<button class="cl-btn cl-btn-danger cl-radius js-unselect"><i class="iconfont icon-image"></i></button>',
-                    '<button class="cl-btn cl-btn-primary cl-radius js-setbg"><i class="iconfont icon-exchange"></i></button>',
-                    '<button class="cl-btn cl-btn-danger cl-radius js-unsetbg"><i class="iconfont icon-exchange"></i></button>',
-                    '<button class="cl-btn cl-btn-default cl-radius js-remove"><i class="iconfont icon-trash"></i></button>',
-                '</div>'
-            ].join(''))
-            that.tools.find('button.js-unselect,button.js-setbg,button.js-unsetbg').hide()
-
+                    '<button class="cl-btn cl-btn-danger cl-radius js-unselect" style="display:none"><i class="iconfont icon-image"></i></button>',
+                    '<button class="cl-btn cl-btn-primary cl-radius js-setbg" style="display:none"><i class="iconfont icon-exchange"></i></button>',
+                    '<button class="cl-btn cl-btn-danger cl-radius js-unsetbg" style="display:none"><i class="iconfont icon-exchange"></i></button>',
+                    '<button class="cl-btn cl-btn-default cl-radius js-remove"><i class="iconfont icon-trash"></i></button>'
+                ])
+            
+            
             that.elem.append([that.container, that.tools, that.previewArea])
         },
         initEvent: function () {

@@ -4,9 +4,10 @@
 
 $(function () {
     var elem = $('.container')
-    var customLabel = ''
-
-    function init (option, widgets) {
+    var $initForm = $('#initForm')
+    var customLabel = null
+    var host = 'http://172.16.0.126:8000'
+    var init = function (option, widgets) {
         option = option || {}
         widgets = widgets || []
 
@@ -19,72 +20,75 @@ $(function () {
         }
 
         elem.html('').append(customLabel.getElem())
-        customLabel.onSave = function () {
-            console.log('onSave')
+        customLabel.onSave = function (data) {
+            var postData = {
+                id: data.config.id || undefined,
+                configs: JSON.stringify(data.widgets),
+                formData: customLabel.getHtml()
+            }
+            console.log(postData)
+            // TODO 保存
         }
     }
 
-    $('.btn-add-new').on('click', function () {
-        $('#initForm').modal({ 
-            escapeClose: false,
-            clickClose: false,
-            showClose: false,
-            fadeDuration: 100
+    $.ajaxSetup({
+        global: true,
+        headers : { 'token': 'tag_tool' },
+        dataType: 'json',
+        error: function (res) {
+            alert(res.message)
+        }
+    })
+
+    $('.test-menu')
+        .on('click', '.btn-add-new', function () {
+            $('#initForm').modal({ 
+                escapeClose: false,
+                clickClose: false,
+                showClose: false,
+                fadeDuration: 100
+            })
         })
-    })
+        .on('click', '.btn-add-new-by-config', function () {
+            // 加载数据
+            $.ajax({
+                method: 'GET',
+                url: '/api/temps/1',
+                data: {},
+                success: function (res) {
+                    var option = {
+                        id: res.data.id,
+                        name: res.data.name,
+                        type: res.data.temp_group_name,
+                        typeID: res.data.temp_group_id,
+                        size: [res.data.width, res.data.height]
+                    }
+                    var widgets = JSON.parse(res.data.configs)
 
-    $('.btn-remove').on('click', function () {
-        customLabel.remove()
-    })
-
-    // 创建实例
-    $('.btn-add-new-by-config').on('click', function () {
-        $.get('./data/config.json?random=' + Math.random()).then(function (data) {
-            init(data.config, data.widgets)
+                    if (widgets.length) {
+                        init(option, widgets)
+                    } else {
+                        init(option)
+                    }
+                }
+            })
         })
-    })
-
-    // 填充实例
-    $('.btn-fill-data').on('click', function () {
-        $.get('./data/data.json?random=' + Math.random()).then(function (data) {
-            customLabel.fillData(data)
+        .on('click', '.btn-fill-data', function () {
+            // 填充实例
+            $.get('./data/data.json?random=' + Math.random()).then(function (data) {
+                customLabel.fillData(data)
+            })
         })
-    })
-
-    // 获取模板数据
-    $('.btn-get-data').on('click', function () {
-        console.log(JSON.stringify(customLabel.getData()))
-    })
-
-    // 获取HTML
-    $('.btn-get-html').on('click', function () {
-        alert(customLabel.getHtml())
-    })
-
-    // 打印
-    $('.btn-finish').on('click', function () {
-        // 第一步获取模板
-        $.get('./data/config.json?random=' + Math.random()).then(function (data) {
-            // 第二步初始化
-            customLabel = new CustomLabel(data.config)
-            customLabel.addPageWidgets(data.widgets)
-            // // 第三步填充订单信息
-            // $.get('./data/data.json?random=' + Math.random()).then(function (data) {
-            //     customLabel.fillData(data)
-            //     // 第四步打印
-            //     // var html = customLabel.getData();
-            //     // console.log(html);
-            //     // 拿到html去打印
-            //     // send(html)
-            // })
+        .on('click', '.btn-get-data', function () {
+            // 获取模板数据
+            console.log(JSON.stringify(customLabel.getData()))
         })
-    })
+        .on('click', '.btn-get-html', function () {
+             // 获取HTML
+            console.log(customLabel.getHtml())
+        })
 
-    $('.btn-reload').on('click', function () {
-        window.location.reload()
-    })
-
-    $('#initForm')
+    $initForm
         .on('change', '[name="sizetype"]', function() {
             var $sizetype1 = $('#sizetype1')
             var $sizetype2 = $('#sizetype2')
@@ -100,12 +104,13 @@ $(function () {
             }
         })
         .on('click', '.modal__btn_primary', function () {
-            var name = $('#initForm').find('[name="name"]').val()
-            var type = $('#initForm').find('[name="type"]').val()
-            var sizeType = $('#initForm').find('[name="sizetype"]:checked').val()
-            var size = $('#initForm').find('[name="size"]:checked').val()
-            var width = $('#initForm').find('[name="width"]').val()
-            var height = $('#initForm').find('[name="height"]').val()
+            var name = $initForm.find('[name="name"]').val()
+            var typeID = $initForm.find('[name="typeID"]').val()
+            var typeName = $initForm.find('[name="typeID"]>[value="' + typeID + '"]').text()
+            var sizeType = $initForm.find('[name="sizetype"]:checked').val()
+            var size = $initForm.find('[name="size"]:checked').val()
+            var width = $initForm.find('[name="width"]').val()
+            var height = $initForm.find('[name="height"]').val()
 
             if (sizeType === '1') {
                 size = size.split(',')
@@ -113,7 +118,34 @@ $(function () {
                 size = [width, height]
             }
 
-            init({ name: name, type: type, size: size })
+            init({
+                name: name,
+                type: typeName,
+                typeID: typeID,
+                size: size
+            })
+
             $.modal.close()
         })
+
+    $.ajax({
+        method: 'GET',
+        url: '/api/temp_groups',
+        data: {},
+        success: function (res) {
+            if (res.data && res.data.length) {
+                var optionTpl = ''
+                $.each(res.data, function (index, item) {
+                    optionTpl += '<option value="' + item.id + '">' + item.name + '</option>'
+                })
+                $initForm.find('select[name="type"]').html(optionTpl)
+            }
+            $initForm.modal({ 
+                escapeClose: false,
+                clickClose: false,
+                showClose: false,
+                fadeDuration: 100
+            })
+        }
+    })
 })

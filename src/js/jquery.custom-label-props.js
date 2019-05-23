@@ -4,6 +4,8 @@
 
 //= ===========自定义属性面板字段=======================================================
 
+var host = 'http://169.254.113.220:8000'
+
 // 输入框
 CustomLabel.addPropsPanelField('text', function (data, update) {
     var $elem = $([
@@ -620,13 +622,11 @@ CustomLabel.addPropsPanelField('fileUpload', function (prop, update) {
     var value = prop.value
     var label = prop.label
     var option = prop.option
-    var host = 'http://172.16.0.126:888'
-    var $elem = $('<div></div>')
 
     var $fileUpload = $([
         '<div class="cl-form-group">',
             '<label class="cl-form-group-label">选择' + label + '：</label>',
-            '<input class="cl-input" id="templetfile" type="file" value="' + value + '">',
+            '<input class="cl-input" id="templetfile" type="file">',
         '</div>'
     ].join(''))
     $fileUpload
@@ -650,21 +650,31 @@ CustomLabel.addPropsPanelField('fileUpload', function (prop, update) {
                 $.ajaxFileUpload({
                     url: host + '/api/upload_img',
                     secureuri: false,
-                    fileElementId: 'file',
+                    fileElementId: 'templetfile',
                     dataType: 'json',
                     success: function (data, status) {
                         console.log('上传成功')
-                        console.log(data)
+                        $preview.attr('src', host + data.path)
+                        update(data.path)
                     },
                     error: function (data, status, e) {
-                        console.log('上传失败')
+                        alert('上传失败，以下测试数据')
+                        $preview.attr('src', host + '/img/img_product.jpg')
+                        update('/img/img_product.jpg')
                     }
                 })
             } else {
                 alert('浏览器无法上传')
             }
         })
-        .appendTo($elem)
+
+    $preview = $('<img>')
+        .attr('src', value ? host + '/' + value : '/img/img_default.jpg')
+        .css('width', '100%')
+
+    var $elem = $('<div></div>')
+        .append($fileUpload)
+        .append($preview)
 
     return $elem
 })
