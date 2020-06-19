@@ -1,0 +1,17 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "地址标签"
+    },
+    {
+      "id": 3,
+      "name": "SKU标签"
+    }
+  ],
+  "meta": {
+    "message": "获取成功",
+    "status": "success",
+    "status_code": 200
+  }
+}

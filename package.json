@@ -1,19 +1,33 @@
 {
-  "name": "custom",
-  "version": "1.0.0",
-  "description": "标签设计器",
-  "scripts": {
-    "test": "standard && node my-tests.js"
-  },
-  "main": "index.js",
-  "author": "wwhyes",
-  "license": "MIT",
-  "devDependencies": {
-    "eslint": "^5.16.0",
-    "eslint-config-standard": "^12.0.0",
-    "eslint-plugin-import": "^2.16.0",
-    "eslint-plugin-node": "^8.0.1",
-    "eslint-plugin-promise": "^4.1.1",
-    "eslint-plugin-standard": "^4.0.0"
-  }
+    "name": "custom",
+    "version": "1.0.0",
+    "description": "标签设计器",
+    "scripts": {
+        "dev": "webpack --mode deveplopment",
+        "build": "babel src -d build",
+        "copy": "babel ./src/index.js --out-dir test",
+        "test": "webpack-cli --mode development --entry ./demo.js --output ./demo.bundle.js"
+    },
+    "main": "index.js",
+    "author": "wwhyes",
+    "license": "MIT",
+    "devDependencies": {
+        "@babel/cli": "^7.4.4",
+        "@babel/core": "^7.4.4",
+        "@babel/plugin-proposal-class-properties": "^7.4.4",
+        "@babel/plugin-transform-arrow-functions": "^7.2.0",
+        "@babel/plugin-transform-runtime": "^7.4.4",
+        "@babel/preset-env": "^7.4.4",
+        "babel-loader": "^8.0.6",
+        "eslint": "^5.16.0",
+        "html-webpack-plugin": "^3.2.0",
+        "standard": "^12.0.1",
+        "webpack": "^4.31.0",
+        "webpack-cli": "^3.3.2",
+        "webpack-dev-server": "^3.4.1"
+    },
+    "dependencies": {
+        "@babel/runtime": "^7.4.4",
+        "@babel/runtime-corejs2": "^7.4.4"
+    }
 }

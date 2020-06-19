@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    <title>Custom Label</title>
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1105799_l68i9xnvsq8.css">
+    <link rel="stylesheet" href="css/preview.css">
+    <link rel="stylesheet" href="css/jquery.custom-label.css">
+    <link rel="stylesheet" href="css/jquery.modal.css">
+    <style>
+        #initForm {
+            padding: 0;
+        }
+        .test-menu {
+            background-color: rgba(0, 0, 0, .3);
+            position: absolute;
+            z-index: 1;
+            bottom: 0;
+            right: 0;
+            padding: 10px 15px;
+            overflow: hidden;
+        }
+        .test-menu button {
+            margin: 0 10px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-menu">
+        <button class="cl-btn cl-btn-primary cl-radius btn-add-new">初始化</button>
+        <button class="cl-btn cl-btn-primary cl-radius btn-add-new-by-config">加载数据</button>
+        <button class="cl-btn cl-btn-primary cl-radius btn-fill-data">填充数据</button>
+        <button class="cl-btn cl-btn-primary cl-radius btn-get-html">获取HTML</button>
+        <button class="cl-btn cl-btn-primary cl-radius btn-get-data">获取模板</button>
+    </div>
+    <form class="modal" id="initForm">
+        <div class="modal__hd">
+            <strong class="modal__title">新增自定义标签模板</strong>
+        </div>
+        <div class="modal__bd">
+            <div class="cl-form-horizontal">
+                <div class="cl-form-group">
+                    <label class="cl-form-group-label">模板名称：</label>
+                    <div class="cl-form-control">
+                        <input class="cl-input" type="text" name="name" value="默认名字">
+                    </div>
+                </div>
+                <div class="cl-form-group">
+                    <label class="cl-form-group-label">模板类型：</label>
+                    <div class="cl-form-control">
+                        <select class="cl-select" name="typeID">
+                            <option value="1">地址标签</option>
+                            <option value="2">报关单</option>
+                            <option value="3">配货标签</option>
+                            <option value="4">发票</option>
+                            <option value="5">SKU标签</option>
+                            <option value="6">FBA标签</option>
+                            <option value="7">库位标签</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="cl-form-group">
+                    <label class="cl-form-group-label">规格尺寸：</label>
+                    <div class="cl-form-control">
+                        <div class="cl-form-group-inline">
+                            <div class="cl-form-group">
+                                <label class="cl-checkbox">
+                                    <input type="radio" name="sizetype" value="1" checked>
+                                    <span>标准规格</span>
+                                </label>
+                            </div>
+                            <div class="cl-form-group">
+                                <label class="cl-checkbox">
+                                    <input type="radio" name="sizetype" value="2">
+                                    <span>自定义规格</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cl-form-group" id="sizetype1">
+                    <label class="cl-form-group-label">&nbsp;</label>
+                    <div class="cl-form-control">
+                        <div class="cl-form-group-inline">
+                            <div class="cl-form-group">
+                                <label class="cl-checkbox">
+                                    <input type="radio" name="size" value="100,100" checked>
+                                    <span>100mm*100mm</span>
+                                </label>
+                                <label class="cl-checkbox">
+                                    <input type="radio" name="size" value="70,30">
+                                    <span>70mm*30mm</span>
+                                </label>
+                                <label class="cl-checkbox">
+                                    <input type="radio" name="size" value="210,297">
+                                    <span>A4(210mm*297mm)</span>
+                                </label>
+                            </div>
+                            <div class="cl-form-group">
+                                <label class="cl-checkbox">
+                                    <input type="radio" name="size" value="100,150">
+                                    <span>100mm*150mm</span>
+                                </label>
+                                <label class="cl-checkbox">
+                                    <input type="radio" name="size" value="50,30">
+                                    <span>50mm*30mm</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cl-form-group" id="sizetype2" style="display: none;">
+                    <label class="cl-form-group-label">&nbsp;</label>
+                    <div class="cl-form-control cl-form-group-inline">
+                        <div class="cl-form-group">
+                            <div class="cl-input-group">
+                                <div class="cl-input-group-addon">长</div>
+                                <input class="cl-input" type="text" name="width">
+                                <div class="cl-input-group-addon">mm</div>
+                            </div>
+                        </div>
+                        <div class="cl-form-group">
+                            <div class="cl-input-group">
+                                <div class="cl-input-group-addon">宽</div>
+                                <input class="cl-input" type="text" name="height">
+                                <div class="cl-input-group-addon">mm</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal__ft">
+            <a class="modal__btn modal__btn_primary" href="javascript:;">确定</a>
+        </div>
+    </form>
+    <div class="container"></div>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.modal.js"></script>
+    <script src="js/jquery.ajaxfileupload.js"></script>
+    <script src="js/jquery.custom-label.js"></script>
+    <script src="js/jquery.custom-label-props.js"></script>
+    <script src="js/jquery.custom-label-components.js"></script>
+    <script src="js/init.js"></script>
+</body>
+</html>

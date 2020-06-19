@@ -24,19 +24,23 @@ module.exports = {
         // allow debugger during development
         'no-debugger': 0,
         'space-before-function-paren': 0,
-        "indent": ["error", 4, {
-            "SwitchCase": 1,
-            "VariableDeclarator": 1,
-            "outerIIFEBody": 1,
-            "MemberExpression": 1,
-            "FunctionDeclaration": { "parameters": 1, "body": 1 },
-            "FunctionExpression": { "parameters": 1, "body": 1 },
-            "CallExpression": { "arguments": 1 },
-            "ArrayExpression": "off",
-            "ObjectExpression": 1,
-            "ImportDeclaration": 1,
-            "flatTernaryExpressions": false,
-            "ignoreComments": false
-          }],
+        "indent": [
+            "error",
+            4,
+            {
+                "SwitchCase": 1,
+                "VariableDeclarator": 1,
+                "outerIIFEBody": 1,
+                "MemberExpression": 1,
+                "FunctionDeclaration": { "parameters": 1, "body": 1 },
+                "FunctionExpression": { "parameters": 1, "body": 1 },
+                "CallExpression": { "arguments": 1 },
+                "ArrayExpression": "off",
+                "ObjectExpression": 1,
+                "ImportDeclaration": 1,
+                "flatTernaryExpressions": false,
+                "ignoreComments": false
+            }
+        ],
     }
 };
